@@ -1,0 +1,2 @@
+http://localhost:5000/detect
+http://localhost/phpmyadmin/index.php
