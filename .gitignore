@@ -8,8 +8,8 @@ venv/
 # Ignore IDE specific files
 .vscode/
 
-cv2t.py
-add_missing_data.py
+model/cv2t.py
+model/add_missing_data.py
 =======
 # Byte-compiled / optimized / DLL files
 __pycache__/
