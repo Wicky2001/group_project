@@ -79,6 +79,4 @@ def detector():
             number_plate_start_time = 0
 
 
-
-
 detector()
