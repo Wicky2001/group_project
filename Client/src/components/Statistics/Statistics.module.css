@@ -1,0 +1,31 @@
+.container {
+    display: grid;
+    grid-template-columns: auto repeat(3, 1fr); /*4 cloumns*/
+    grid-template-rows: auto repeat(2, 1fr);  ; /*3 rows*/
+    grid-gap: 5px;
+    height: 100vh;
+  }
+  
+  .navbar {
+    grid-column: 1 / 2;
+    grid-row: 1 / -1;
+  }
+  
+  .SearchBar {
+    grid-column: 2 / 5;
+    grid-row: 1 / 2;
+  }
+  
+  .chart1 {
+    grid-column: 2 / 3;
+    grid-row: 2 / 3;
+  }
+  .chart2 {
+    grid-column: 3 / 5;
+    grid-row: 2 / 3;
+  }
+  .chart3 {
+    grid-column: 2 / 5;
+    grid-row: 3 / 4;
+  }
+

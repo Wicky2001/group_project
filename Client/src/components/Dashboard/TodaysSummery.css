@@ -1,0 +1,58 @@
+.today-summery {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  margin-right: 10px;
+  background-color: white;
+  box-shadow: 0px 8px 16px rgba(50.10, 50.10, 71.27, 0.06);
+  border-radius: 20px;
+  overflow: hidden;
+  padding: 20px;
+  height: 45vh;
+}
+
+.today-summery h2 {
+  margin-top: 0;
+  margin-bottom: 20px;
+  font-size: 22px;
+  font-weight: 700;
+  color: #11263C;
+}
+
+.summery-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.label {
+  font-weight: bold;
+  margin-right: 10px;
+  color: #11263C;
+}
+
+.value {
+  width: 25%;
+  border-radius: 20px;
+  padding: 5px 10px;
+  font-weight: bold;
+  color: #000;
+}
+
+.entered {
+  border: 3px solid;
+  border-color: #31F78C;
+}
+
+.left {
+  border: 3px solid;
+  border-color: #ff6b6b;
+}
+
+.in-premise {
+  border: 3px solid;
+  border-color: #007bff;
+}
+
+.anomalies {
+  background-color: #ffc107;
+}

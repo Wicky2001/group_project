@@ -1,0 +1,62 @@
+.container {
+  margin-top: 10px;
+  margin-right: 10px;
+    background-color: white;
+    box-shadow: 0px 8px 16px rgba(50.10, 50.10, 71.27, 0.06);
+    border-radius: 20px;
+    overflow: hidden;
+    padding: 20px;
+    height: 97%;
+  }
+  
+  .header {
+    font-size: 22px;
+    font-weight: 700;
+    font-family: 'Poppins', sans-serif;
+    color: #11263C;
+    margin-bottom: 10px;
+  }
+  
+  .entriesContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .entryContainer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #f5f5f5;
+    border-radius: 10px;
+    padding: 10px;
+  }
+  
+  .entryDetails {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .date,
+  .numberPlate,
+  .vehicleType {
+    font-size: 16px;
+    font-weight: 400;
+    font-family: 'Arial Rounded MT Bold', sans-serif;
+    color: #11263C;
+  }
+  
+  .statusIndicator {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+  }
+  
+  .statusIn {
+    background-color: #31F78C;
+  }
+  
+  .statusOut {
+    background-color: #ff6b6b;
+  }
