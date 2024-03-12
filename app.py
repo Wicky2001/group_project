@@ -32,20 +32,20 @@ class detections(db.Model):
     number_plate = db.Column(db.Integer, nullable=True)
 
 
-class EntryFieldSchema(marshmallow.Schema):
-
-    year = fields.Integer()
-    month = fields.Integer()
-    date = fields.Integer()
-    hour = fields.Integer()
-    minute = fields.Integer()
-    second = fields.Integer()
-    number_plate = fields.String()
+# class EntryFieldSchema(marshmallow.Schema):
+#
+#     year = fields.Integer()
+#     month = fields.Integer()
+#     date = fields.Integer()
+#     hour = fields.Integer()
+#     minute = fields.Integer()
+#     second = fields.Integer()
+#     number_plate = fields.String()
 
 
 
 class lastEntry(Resource):
-    # @marshal_with(EntryFieldSchema)
+
     def get(self):
         print("req recieved")
         last_entered = detections.query.order_by(detections.id.desc()).first()
@@ -67,6 +67,7 @@ class lastEntry(Resource):
 
         response = jsonify(marshaled_entry)
         return response
+
 
 class SearchSchema(Schema):
     day = fields.Str(required=False, allow_none=True)
@@ -165,12 +166,7 @@ class SearchByDate(Resource):
             endMinute = parsedEndTime.minute
             endSecond = parsedEndTime.second
 
-            print("Debug: startYear, endYear:", startYear, endYear)
-            print("Debug: startMonth, endMonth:", startMonth, endMonth)
-            print("Debug: startDay, endDay:", startDay, endDay)
-            print("Debug: startHour, endHour:", startHour, endHour)
-            print("Debug: startMinute, endMinute:", startMinute, endMinute)
-            print("Debug: startSecond, endSecond:", startSecond, endSecond)
+
 
             entries = detections.query.filter(
             detections.year >= startYear,
@@ -207,10 +203,27 @@ class SearchByDate(Resource):
         response = jsonify(marshaled_entries)
         return response
 
+class AddEntrySchema(Schema):
+
+    startDate =fields.String(required=True)
+    endDate = fields.String(required=True)
+    enteredTime = fields.Time(required=True)
+
+
+
+class addEntry():
+    def post(self):
+        schema=AddEntrySchema()
+        result=schema.load(data)  #deserializing data
+
+
+
+
 
 api.add_resource(lastEntry, "/lastEntry")
 api.add_resource(Search, "/Search")
 api.add_resource(SearchByDate, "/SearchByDate")
+api.add_resource(addEntry,"/addEntry")
 
 if __name__ == "__main__":
     app.run(debug=True, port=5001)
