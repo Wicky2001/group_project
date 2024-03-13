@@ -1,14 +1,14 @@
-.today-summery {
+.summery {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  margin-right: 10px;
   background-color: white;
   box-shadow: 0px 8px 16px rgba(50.10, 50.10, 71.27, 0.06);
   border-radius: 20px;
   overflow: hidden;
   padding: 20px;
+  height: 45vh;
 }
 
-.today-summery h2 {
+.summery h2 {
   margin-top: 0;
   margin-bottom: 20px;
   font-size: 22px;
@@ -30,7 +30,6 @@
 }
 
 .value {
-  justify-content: center;
   width: 25%;
   border-radius: 20px;
   padding: 5px 10px;

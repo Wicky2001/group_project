@@ -6,6 +6,9 @@
   overflow: hidden;
   padding: 20px;
   height: 95%;
+  display: flex;
+  align-items: flex-start;
+  flex-wrap: wrap;
   }
   
   .header {

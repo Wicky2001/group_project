@@ -1,8 +1,10 @@
 .navbar {
     grid-column: 1 / 2;
     grid-row: 1 / -1;
-    background-color: #f5f5f5;
+    background-color: white;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 20px;
+    margin: 0px 10px 0 10px;
   }
 
   .font{
@@ -13,17 +15,17 @@
 
 /* Change Font Color */
 .font .nav-link {
-  color: #333 !important;
+  color: Black !important;
 }
 
 /* Change Background Color */
 .navbar {
-  background-color: #f5f5f5 !important;
+  background-color: white !important;
 }
 
 /* Set Active Colors */
 .nav-link.active {
-  color: #007bff !important;
+  color: #31F78C !important;
   font-weight: bold !important;
 }
 
@@ -43,6 +45,8 @@
 }
 
 .font .nav-link:hover {
-  color: #007bff !important;
+  color: #31F78C !important;
   text-decoration: none !important;
 }
+
+

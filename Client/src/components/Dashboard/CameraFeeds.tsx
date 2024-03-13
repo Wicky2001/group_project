@@ -1,4 +1,3 @@
-import React from "react";
 import "./CameraFeeds.css";
 
 function CameraFeeds() {
