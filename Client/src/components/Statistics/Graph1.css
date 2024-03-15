@@ -45,10 +45,12 @@
     margin-right: 10px;
     font-weight: bold;
     color: #000;
+    border:2px solid;
     width: 90px; /* Adjust this value as needed */
   }
   
   .count.in {
+   
     background-color: #31F78C;
     color: black;
   }

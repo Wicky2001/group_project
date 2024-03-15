@@ -9,3 +9,19 @@
     padding: 20px;
   }
   
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: black;
+    color: white;
+}
+/* Cell styling */
+td, th {
+    border: 1px solid white;
+    text-align: left;
+    padding: 8px;
+}
+/* Header styling */
+th {
+    background-color: #444;
+}
