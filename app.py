@@ -40,29 +40,39 @@ class detections(db.Model):
 
 
 
-class lastEntry(Resource):
+class lastEntries(Resource):
     def get(self):
         print("Request received")
-        last_entered = detections.query.filter_by(in_or_out="IN").order_by(detections.id.desc()).first()
+        lastEnteredEntries = detections.query.order_by(detections.id.desc()).first(10)
 
-        if not last_entered:
+        if not lastEnteredEntries:
             abort(404, message="Couldn't find an entry")
 
-        marshaled_entry = {
-            'day': {
-                'year': last_entered.year,
-                'month': last_entered.month,
-                'date': last_entered.date,
-                'hour': last_entered.hour,
-                'minute': last_entered.minute,
-                'second': last_entered.second,
-            },
-            'number_plate': last_entered.number_plate,
-            'vehicle_type':last_entered.vehicle_type,
-            'status': last_entered.in_or_out
+        result=[]
+
+        for entry in lastEnteredEntries:
+            marshaled_entry = {
+                'day': {
+                    'year': entry.year,
+                    'month': entry.month,
+                    'date': entry.date,
+                    'hour': entry.hour,
+                    'minute': entry.minute,
+                    'second': entry.second,
+                },
+                'number_plate': entry.number_plate,
+                'vehicle_type':entry.vehicle_type,
+                'status': entry.in_or_out
+            }
+            result.append(marshaled_entry)
+
+        response={
+            'length':len(result),
+            'result':result,
+            'lastimg': lastEnteredEntries[0].img if lastEnteredEntries else None,
         }
 
-        return jsonify(marshaled_entry)
+        return response
 
 class SearchSchema(Schema):
     day = fields.Str(required=False, allow_none=True)
@@ -115,8 +125,9 @@ class searchByDateSchema(Schema):
     endDate = fields.Date(required=True)
     startTime = fields.Time(required=True)
     endTime = fields.Time(required=True)
-    vehicleType=fields.String(required=False)
-    statics = fields.Boolean(required=False, allow_none=True)
+    vehicleType=fields.String(required=False,allow_none=True)
+    statics = fields.Boolean(required=True)
+    numberPlate=fields.String(required=False,allow_none=True)
 
 class searchByDate(Resource):
     def get(self):
@@ -131,6 +142,8 @@ class searchByDate(Resource):
         endTime = request.args.get('endTime')
         statics = request.args.get('statics')
         vehicleType=request.args.get('vehicleType')
+        numberPlate=request.args.get('numberPlate')
+
         statics_bool = statics.lower() == 'true' if statics else False
 
         # Validate data using Schema's validate method
@@ -139,7 +152,9 @@ class searchByDate(Resource):
             'endDate': endDate,
             'startTime': startTime,
             'endTime': endTime,
-            'statics': statics
+            'statics': statics,
+            'vehicleType':vehicleType,
+            'numberPlate':numberPlate
 
         }
 
@@ -176,99 +191,184 @@ class searchByDate(Resource):
                     and_(
                         or_(
                             and_(
-                                detections.year > startYear,
-                                detections.year < endYear
-                            ),
-                            or_(
-                                and_(
-                                    detections.year == startYear,
-                                    detections.month > startMonth,
-                                    detections.month < endMonth
-
-                                ),
-                                and_(
-                                    detections.year == startYear,
-                                    detections.month == startMonth,
-                                    detections.date >= startDay,
-                                    detections.date <= endDate,
-
-
+                                endYear == startYear,
+                                or_(
+                                    and_(
+                                        startMonth == endMonth,
+                                        detections.year == startYear,
+                                        detections.month == startMonth,
+                                        detections.month == endMonth,
+                                        detections.date >= startDay,
+                                        detections.date <= endDay
+                                    ),
+                                    and_(
+                                        detections.year == startYear,
+                                        startMonth < endMonth,
+                                        or_(
+                                            and_(
+                                                detections.month < endMonth,
+                                                detections.month > startMonth
+                                            ),
+                                            and_(
+                                                detections.month == startMonth,
+                                                detections.date >= startDay
+                                            ),
+                                            and_(
+                                                detections.month == endMonth,
+                                                detections.date <= endDay
+                                            )
+                                        )
+                                    )
                                 )
                             ),
-                            or_(
-                                and_(
-                                    detections.year == endYear,
-                                    detections.month < endMonth,
-                                    detections.month > startMonth
-                                ),
-
-                                and_(
-                                    detections.year == endYear,
-                                    detections.month == endMonth,
-                                    detections.date <= endDay,
-                                    detections.date >= startDate,
-
+                            and_(
+                                endYear > startYear,
+                                or_(
+                                    and_(
+                                        detections.year > startYear,
+                                        detections.year < endYear
+                                    ),
+                                    and_(
+                                        detections.year == startYear,
+                                        detections.month > startMonth
+                                    ),
+                                    and_(
+                                        detections.year == startYear,
+                                        detections.month == startMonth,
+                                        detections.date >= startDay
+                                    ),
+                                    and_(
+                                        detections.year == endYear,
+                                        detections.month < endMonth
+                                    ),
+                                    and_(
+                                        detections.year == endYear,
+                                        detections.month == endMonth,
+                                        detections.date <= endDay
+                                    )
                                 )
-                            ),
+                            )
                         ),
                         or_(
                             and_(
-                                detections.hour > startHour,
-                                detections.hour < endHour
-                            ),
-                            or_(
-                                and_(
-                                    detections.hour == startHour,
-                                    detections.minute > startMinute,
-                                    detections.minute < endMinute,
-                               ),
+                                endHour == startHour,
+                                or_(
+                                    and_(
+                                        startMinute == endMinute,
 
-                                and_(
-                                    detections.hour == startHour,
-                                    detections.minute == startMinute,
-                                    detections.second >= startSecond,
-                                    detections.second <= endSecond
-
+                                        detections.hour == startHour,
+                                        detections.minute == startMinute,
+                                        detections.minute == endMinute,
+                                        detections.second >= startSecond,
+                                        detections.second <= endSecond
+                                    ),
+                                    and_(
+                                        detections.hour == startHour,
+                                        startMinute != endMinute,
+                                        or_(
+                                            and_(
+                                                detections.minute < endMinute,
+                                                detections.minute > startMinute
+                                            ),
+                                            and_(
+                                                detections.minute == startMinute,
+                                                detections.second >= startSecond
+                                            ),
+                                            and_(
+                                                detections.minute == endMinute,
+                                                detections.second <= endSecond
+                                            )
+                                        )
+                                    )
                                 )
                             ),
-                            or_(
-                                and_(
-                                    detections.hour == endHour,
-                                    detections.minute > startMinute,
-                                    detections.minute < endMinute,
-                                ),
-
-                                and_(
-                                    detections.hour == endHour,
-                                    detections.minute == endMinute,
-                                    detections.second >= startSecond,
-                                    detections.second <= endSecond
-
+                            and_(
+                                endHour != startHour,
+                                or_(
+                                    and_(
+                                        detections.hour > startHour,
+                                        detections.hour < endHour
+                                    ),
+                                    and_(
+                                        detections.hour == startHour,
+                                        detections.minute > startMinute
+                                    ),
+                                    and_(
+                                        detections.hour == startHour,
+                                        detections.minute == startMinute,
+                                        detections.second >= startSecond
+                                    ),
+                                    and_(
+                                        detections.hour == endHour,
+                                        detections.minute < endMinute
+                                    ),
+                                    and_(
+                                        detections.hour == endHour,
+                                        detections.minute == endMinute,
+                                        detections.second <= endSecond
+                                    )
                                 )
                             )
                         )
                     )
-
                 ).all()
 
-                # print(entries)
-                # print((entries[1].number_plate))
                 marshaledEntries = []
-                for entry in entries:
-                    marshaledEntry = {
-                        'day': {
-                            'year': entry.year,
-                            'month': entry.month,
-                            'date': entry.date,
-                            'hour': entry.hour,
-                            'minute': entry.minute,
-                            'second': entry.second
-                        },
-                        'number_plate': entry.number_plate,
-                        'vehicle_type': entry.vehicle_type,
-                        'status': entry.in_or_out
-                    }
-                    marshaledEntries.append(marshaledEntry)
+                if vehicleType == "All":
+                    for entry in entries:
+                        marshaledEntry = {
+                            'id': entry.id,
+                            'day': {
+                                'year': entry.year,
+                                'month': entry.month,
+                                'date': entry.date,
+                                'hour': entry.hour,
+                                'minute': entry.minute,
+                                'second': entry.second
+                            },
+                            'number_plate': entry.number_plate,
+                            'vehicle_type': entry.vehicle_type,
+                            'status': entry.in_or_out
+                        }
+                        marshaledEntries.append(marshaledEntry)
+                else:
+                    if(numberPlate):
+                            for entry in entries:
+                                if entry.vehicle_type == vehicleType and entry.number_plate == numberPlate:
+                                    marshaledEntry = {
+                                        'id': entry.id,
+                                        'day': {
+                                            'year': entry.year,
+                                            'month': entry.month,
+                                            'date': entry.date,
+                                            'hour': entry.hour,
+                                            'minute': entry.minute,
+                                            'second': entry.second
+                                        },
+                                        'number_plate': entry.number_plate,
+                                        'vehicle_type': entry.vehicle_type,
+                                        'status': entry.in_or_out
+                                    }
+                                    marshaledEntries.append(marshaledEntry)
+                    else:
+                        for entry in entries:
+                            if entry.vehicle_type == vehicleType:
+                                marshaledEntry = {
+                                    'id': entry.id,
+                                    'day': {
+                                        'year': entry.year,
+                                        'month': entry.month,
+                                        'date': entry.date,
+                                        'hour': entry.hour,
+                                        'minute': entry.minute,
+                                        'second': entry.second
+                                    },
+                                    'number_plate': entry.number_plate,
+                                    'vehicle_type': entry.vehicle_type,
+                                    'status': entry.in_or_out
+                                }
+                                marshaledEntries.append(marshaledEntry)
+
 
                 response_data = {
                     'count': len(marshaledEntries),
@@ -277,80 +377,133 @@ class searchByDate(Resource):
                 response = jsonify(response_data)
 
 
+
             else:
 
-                vehicleTypeInOrOutEntries = detections.query.filter(
+                vehicleTypeInOrOutEntries =  detections.query.filter(
                     and_(
                         or_(
                             and_(
-                                detections.year > startYear,
-                                detections.year < endYear
-                            ),
-                            or_(
-                                and_(
-                                    detections.year == startYear,
-                                    detections.month > startMonth,
-                                    detections.month<endMonth
-                                ),
-                                and_(
-                                    detections.year == startYear,
-                                    detections.month == startMonth,
-                                    detections.date >= startDay,
-                                    detections.date<=endDate
+                                endYear == startYear,
+                                or_(
+                                    and_(
+                                        startMonth == endMonth,
+                                        detections.year == startYear,
+                                        detections.month == startMonth,
+                                        detections.month == endMonth,
+                                        detections.date >= startDay,
+                                        detections.date <= endDay
+                                    ),
+                                    and_(
+                                        detections.year == startYear,
+                                        startMonth < endMonth,
+                                        or_(
+                                            and_(
+                                                detections.month < endMonth,
+                                                detections.month > startMonth
+                                            ),
+                                            and_(
+                                                detections.month == startMonth,
+                                                detections.date >= startDay
+                                            ),
+                                            and_(
+                                                detections.month == endMonth,
+                                                detections.date <= endDay
+                                            )
+                                        )
+                                    )
                                 )
                             ),
-                            or_(
-                                and_(
-                                    detections.year == endYear,
-                                    detections.month < endMonth,
-                                    detections.month>startMonth
-                                ),
-
-                                and_(
-                                    detections.year == endYear,
-                                    detections.month == endMonth,
-                                    detections.date <= endDay,
-                                    detections.date>=startDate
+                            and_(
+                                endYear > startYear,
+                                or_(
+                                    and_(
+                                        detections.year > startYear,
+                                        detections.year < endYear
+                                    ),
+                                    and_(
+                                        detections.year == startYear,
+                                        detections.month > startMonth
+                                    ),
+                                    and_(
+                                        detections.year == startYear,
+                                        detections.month == startMonth,
+                                        detections.date >= startDay
+                                    ),
+                                    and_(
+                                        detections.year == endYear,
+                                        detections.month < endMonth
+                                    ),
+                                    and_(
+                                        detections.year == endYear,
+                                        detections.month == endMonth,
+                                        detections.date <= endDay
+                                    )
                                 )
-                            ),
+                            )
                         ),
                         or_(
                             and_(
-                                detections.hour > startHour,
-                                detections.hour < endHour
-                            ),
-                            or_(
-                                and_(
-                                    detections.hour == startHour,
-                                    detections.minute > startMinute,
-                                    detections.minute <= endMinute,
+                                endHour == startHour,
+                                or_(
+                                    and_(
+                                        startMinute == endMinute,
 
-                                ),
-
-                                and_(
-                                    detections.hour == startHour,
-                                    detections.minute == startMinute,
-                                    detections.second >= startSecond,
-
+                                        detections.hour == startHour,
+                                        detections.minute == startMinute,
+                                        detections.minute == endMinute,
+                                        detections.second >= startSecond,
+                                        detections.second <= endSecond
+                                    ),
+                                    and_(
+                                        detections.hour == startHour,
+                                        startMinute != endMinute,
+                                        or_(
+                                            and_(
+                                                detections.minute < endMinute,
+                                                detections.minute > startMinute
+                                            ),
+                                            and_(
+                                                detections.minute == startMinute,
+                                                detections.second >= startSecond
+                                            ),
+                                            and_(
+                                                detections.minute == endMinute,
+                                                detections.second <= endSecond
+                                            )
+                                        )
+                                    )
                                 )
                             ),
-                            or_(
-                                and_(
-                                    detections.hour == startHour,
-                                    detections.minute > startMinute,
-                                    detections.minute <= endMinute,
-                                ),
-
-                                and_(
-                                    detections.hour == startHour,
-                                    detections.minute == endMinute,
-                                    detections.second <= endSecond,
-
+                            and_(
+                                endHour != startHour,
+                                or_(
+                                    and_(
+                                        detections.hour > startHour,
+                                        detections.hour < endHour
+                                    ),
+                                    and_(
+                                        detections.hour == startHour,
+                                        detections.minute > startMinute
+                                    ),
+                                    and_(
+                                        detections.hour == startHour,
+                                        detections.minute == startMinute,
+                                        detections.second >= startSecond
+                                    ),
+                                    and_(
+                                        detections.hour == endHour,
+                                        detections.minute < endMinute
+                                    ),
+                                    and_(
+                                        detections.hour == endHour,
+                                        detections.minute == endMinute,
+                                        detections.second <= endSecond
+                                    )
                                 )
                             )
                         )
                     )
-
                 ).group_by(detections.vehicle_type, detections.in_or_out
                 ).with_entities(
                     detections.vehicle_type,
@@ -362,7 +515,7 @@ class searchByDate(Resource):
 
                 marshalledStatics = []
                 marshaledVehicleTypesStatics = []
-                print(vehicleTypeInOrOutEntries)
+                # print(vehicleTypeInOrOutEntries)
 
                 for entry in  vehicleTypeInOrOutEntries:
                     marshaledEntry = {
@@ -378,78 +531,129 @@ class searchByDate(Resource):
                 marshalledStatics.append(marshaledVehicleTypesStatics)
 
                 entries = detections.query.filter(
-
                     and_(
                         or_(
                             and_(
-                                detections.year > startYear,
-                                detections.year < endYear
-                            ),
-                            or_(
-                                and_(
-                                    detections.year == startYear,
-                                    detections.month > startMonth,
-                                    detections.month<endMonth
-                                ),
-                                and_(
-                                    detections.year == startYear,
-                                    detections.month == startMonth,
-                                    detections.date >= startDay,
-                                    detections.date<=endDate
+                                endYear == startYear,
+                                or_(
+                                    and_(
+                                        startMonth == endMonth,
+                                        detections.year == startYear,
+                                        detections.month == startMonth,
+                                        detections.month == endMonth,
+                                        detections.date >= startDay,
+                                        detections.date <= endDay
+                                    ),
+                                    and_(
+                                        detections.year == startYear,
+                                        startMonth < endMonth,
+                                        or_(
+                                            and_(
+                                                detections.month < endMonth,
+                                                detections.month > startMonth
+                                            ),
+                                            and_(
+                                                detections.month == startMonth,
+                                                detections.date >= startDay
+                                            ),
+                                            and_(
+                                                detections.month == endMonth,
+                                                detections.date <= endDay
+                                            )
+                                        )
+                                    )
                                 )
                             ),
-                            or_(
-                                and_(
-                                    detections.year == endYear,
-                                    detections.month < endMonth,
-                                    detections.month>startMonth
-                                ),
-
-                                and_(
-                                    detections.year == endYear,
-                                    detections.month == endMonth,
-                                    detections.date <= endDay,
-                                    detections.date>=startDate
+                            and_(
+                                endYear > startYear,
+                                or_(
+                                    and_(
+                                        detections.year > startYear,
+                                        detections.year < endYear
+                                    ),
+                                    and_(
+                                        detections.year == startYear,
+                                        detections.month > startMonth
+                                    ),
+                                    and_(
+                                        detections.year == startYear,
+                                        detections.month == startMonth,
+                                        detections.date >= startDay
+                                    ),
+                                    and_(
+                                        detections.year == endYear,
+                                        detections.month < endMonth
+                                    ),
+                                    and_(
+                                        detections.year == endYear,
+                                        detections.month == endMonth,
+                                        detections.date <= endDay
+                                    )
                                 )
-                            ),
+                            )
                         ),
                         or_(
                             and_(
-                                detections.hour > startHour,
-                                detections.hour < endHour
-                            ),
-                            or_(
-                                and_(
-                                    detections.hour == startHour,
-                                    detections.minute > startMinute,
-                                    detections.minute <= endMinute,
+                                endHour == startHour,
+                                or_(
+                                    and_(
+                                        startMinute == endMinute,
 
-                                ),
-
-                                and_(
-                                    detections.hour == startHour,
-                                    detections.minute == startMinute,
-                                    detections.second >= startSecond,
-
+                                        detections.hour == startHour,
+                                        detections.minute == startMinute,
+                                        detections.minute == endMinute,
+                                        detections.second >= startSecond,
+                                        detections.second <= endSecond
+                                    ),
+                                    and_(
+                                        detections.hour == startHour,
+                                        startMinute != endMinute,
+                                        or_(
+                                            and_(
+                                                detections.minute < endMinute,
+                                                detections.minute > startMinute
+                                            ),
+                                            and_(
+                                                detections.minute == startMinute,
+                                                detections.second >= startSecond
+                                            ),
+                                            and_(
+                                                detections.minute == endMinute,
+                                                detections.second <= endSecond
+                                            )
+                                        )
+                                    )
                                 )
                             ),
-                            or_(
-                                and_(
-                                    detections.hour == startHour,
-                                    detections.minute > startMinute,
-                                    detections.minute <= endMinute,
-                                ),
-
-                                and_(
-                                    detections.hour == startHour,
-                                    detections.minute == endMinute,
-                                    detections.second <= endSecond,
-
+                            and_(
+                                endHour != startHour,
+                                or_(
+                                    and_(
+                                        detections.hour > startHour,
+                                        detections.hour < endHour
+                                    ),
+                                    and_(
+                                        detections.hour == startHour,
+                                        detections.minute > startMinute
+                                    ),
+                                    and_(
+                                        detections.hour == startHour,
+                                        detections.minute == startMinute,
+                                        detections.second >= startSecond
+                                    ),
+                                    and_(
+                                        detections.hour == endHour,
+                                        detections.minute < endMinute
+                                    ),
+                                    and_(
+                                        detections.hour == endHour,
+                                        detections.minute == endMinute,
+                                        detections.second <= endSecond
+                                    )
                                 )
                             )
                         )
                     )
-
                 ).group_by(
                     detections.in_or_out
                 ).with_entities(
@@ -457,7 +661,7 @@ class searchByDate(Resource):
                     func.count().label('total_entries')
                 ).all()
 
-                print(entries)
+
                 totalIn, totalOut = 0, 0
                 for entry in entries:
                     if(entry.in_or_out =='IN'):
@@ -550,7 +754,7 @@ class addEntry(Resource):
             # Handle validation errors
             return {'message': 'Validation error', 'errors': e.messages}, 400  # HTTP status code 400 for Bad Request
 
-api.add_resource(lastEntry, "/lastEntry")
+api.add_resource(lastEntries, "/lastEntry")
 api.add_resource(Search, "/Search")
 api.add_resource(searchByDate, "/searchByDate")
 api.add_resource(addEntry,"/addEntry")
