@@ -1,0 +1,128 @@
+.traffic-throughput {
+    display: flex;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: white;
+    box-shadow: 0px 8px 16px rgba(50.10, 50.10, 71.27, 0.06);
+    border-radius: 20px;
+    overflow: hidden;
+    padding: 20px;
+    margin-right: 10px;
+    height: 100%;
+  }
+  .head{
+    margin-top: 0;
+    margin-bottom: 20px;
+    font-size: 22px;
+    font-weight: 700;
+    color: #11263C;
+  }
+  .types {
+    font-size: 16px;
+    font-weight: 600;
+    font-family: 'Poppins', sans-serif;
+    color: black;
+  }
+  
+  .type {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+  }
+  
+  .type span:first-child {
+    width: 80px; /* Adjust this value as needed */
+    text-align: left;
+    margin-right: 16px; /* Adjust this value as needed */
+  }
+  
+  .count {
+    display: flex;
+    justify-content: space-between;
+    font-size: 16px;
+    font-family: 'Poppins', sans-serif;
+    border-radius: 20px;
+    padding: 5px 10px;
+    margin-right: 10px;
+    font-weight: bold;
+    color: #000;
+    border:2px solid;
+    width: 90px; /* Adjust this value as needed */
+  }
+  
+  .count.in {
+   
+    background-color: #31F78C;
+    color: black;
+  }
+  
+  .count.out {
+    background-color: #ff6b6b;
+    color: black;
+  }
+  
+  /* ... Rest of the CSS remains the same ... */
+  
+  .chart {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+  }
+  
+  .axis {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin-bottom: 10px;
+    font-size: 12px;
+    color: black;
+  }
+  
+  .bars {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    height: 200px;
+    align-items: flex-end;
+  }
+  
+  .bar-group {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 40px;
+  }
+  
+  .bar {
+    width: 20px;
+    background-color: #ccc;
+  }
+  
+  .bar.in {
+    background-color: #4caf50;
+  }
+  
+  .bar.out {
+    background-color: #2196f3;
+  }
+  
+  .legend {
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+    font-size: 12px;
+  }
+  
+  .in-legend {
+    width: 10px;
+    height: 10px;
+    background-color: #4caf50;
+    margin-right: 4px;
+  }
+  
+  .out-legend {
+    width: 10px;
+    height: 10px;
+    background-color: #2196f3;
+    margin-left: 8px;
+    margin-right: 4px;
+  }

@@ -1,0 +1,27 @@
+.container {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin-top: 10px;
+    height: 97%;
+    background-color: rgb(82, 82, 82);
+    box-shadow: 0px 8px 16px rgba(50.10, 50.10, 71.27, 0.06);
+    border-radius: 20px;
+    overflow: hidden;
+    padding: 20px;
+  }
+  
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: black;
+    color: white;
+}
+/* Cell styling */
+td, th {
+    border: 1px solid white;
+    text-align: left;
+    padding: 8px;
+}
+/* Header styling */
+th {
+    background-color: #444;
+}
