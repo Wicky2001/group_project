@@ -1,6 +1,6 @@
 .manual-entry {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background-color: white;
+  background-color:  var(--w-bg1);
   box-shadow: 0px 8px 16px rgba(50.10, 50.10, 71.27, 0.06);
   border-radius: 20px;
   overflow: hidden;
@@ -10,19 +10,23 @@
   align-items: flex-start;
   flex-wrap: wrap;
   }
-  
+  .manual-entry h2 {
+    margin: 0;
+    color: var(--w-font1);
+    font-weight: 700;
+    font-size: 22px;
+  }
   .header {
     font-size: 22px;
     font-weight: 700;
-    color: #11263C;
     display: flex;
     align-items: center;
     margin-bottom: 20px;
   }
   
   .timestamp {
-    background-color: #000;
-    color: #fff;
+    background-color:var(--w-font1);
+    color: var(--w-bg1);
     padding: 5px 10px;
     border-radius: 4px;
     font-size: 14px;
@@ -30,11 +34,7 @@
     margin-left: 10px;
   }
   
-  .manual-entry h2 {
-    margin: 0;
-    font-size: 20px;
-    color: #333;
-  }
+
   
   .form-group {
     display: flex;
@@ -45,14 +45,14 @@
   .form-group label {
     margin-right: 10px;
     font-weight: bold;
-    color: #555;
+    color: var(--w-font1);
     width: 120px;
   }
   
   .form-group input {
     flex: 1;
     padding: 8px 12px;
-    border: 1px solid #ccc;
+    border: 2px solid var(--w-font1);
     border-radius: 20px;
     font-size: 14px;
   }
@@ -68,20 +68,20 @@
     margin-right: 10px;
     border: none;
     border-radius: 20px;
-    background-color: #fff;
-    color: #333;
+    background-color: var(--w-bg1);
+    color: var(--w-font1);
     font-size: 14px;
     font-weight: bold;
     cursor: pointer;
   }
   
   .status-button.active {
-    background-color: #31F78C;
-    color: #000;
+    background-color:var(--green1);
+    color: var(--w-font1);
   }
   .status-button.activered {
-    background-color: #ff6b6b;
-    color: #000;
+    background-color:var(--red1);
+    color: var(--w-font1);
   }
   .form-actions {
     display: flex;
@@ -101,18 +101,18 @@
   }
   
   .clear-button {
-    background-color: #ccc;
-    color: #333;
+    background-color: var(--w-bg1);
+    color:var(--w-font1);
     margin-right: 10px;
   }
   
   .submit-button {
     position: relative;
-    background-color: #333;
-    color: #fff;
+    background-color:var(--w-font1);
+    color: var(--w-bg1);
   }
  .submit-button:active {
     position: relative;
-    background-color: #31F78C;
-    color: #fff;
-  }
+    color:var(--w-font1);
+    background-color:var(--green1);
+ }

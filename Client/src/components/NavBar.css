@@ -6,11 +6,12 @@
     border-radius: 20px;
     margin: 0px 10px 0 10px;
   }
-
+  .navbar {
+    grid-column: 1 / 2;
+    grid-row: 1 / -1;
+  }
   .font{
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    font-weight: 600;
-    color: #333;
   }
 
 /* Change Font Color */
@@ -25,7 +26,7 @@
 
 /* Set Active Colors */
 .nav-link.active {
-  color: #31F78C !important;
+  
   font-weight: bold !important;
 }
 
@@ -35,18 +36,24 @@
 }
 
 /* Additional Styles */
-.navbar {
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+.navbar{} 
+  
+
+.holder{
+  align-items: center ;
 }
 
 .font .nav-link {
-  padding: 10px 15px !important;
-  transition: color 0.3s ease-in-out !important;
+  border-radius: 20px !important;
+  margin:5px 2px;
+  padding: 2px  !important;
 }
 
 .font .nav-link:hover {
-  color: #31F78C !important;
+  background-color: #31F78C !important;
   text-decoration: none !important;
 }
-
+.active {
+  background-color: #31F78C !important;
+}
 

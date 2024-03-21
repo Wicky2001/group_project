@@ -74,25 +74,25 @@ const Graph2: React.FC = () => {
       <div className="sort-traffic">
         <button
           onClick={() => setTimePeriod("hours")}
-          className={timePeriod === "hours" ? "active" : ""}
+          className={timePeriod === "hours" ? "active1" : ""}
         >
           Hours
         </button>
         <button
           onClick={() => setTimePeriod("days")}
-          className={timePeriod === "days" ? "active" : ""}
+          className={timePeriod === "days" ? "active1" : ""}
         >
           Days
         </button>
         <button
           onClick={() => setTimePeriod("months")}
-          className={timePeriod === "months" ? "active" : ""}
+          className={timePeriod === "months" ? "active1" : ""}
         >
           Months
         </button>
         <button
           onClick={() => setTimePeriod("years")}
-          className={timePeriod === "years" ? "active" : ""}
+          className={timePeriod === "years" ? "active1" : ""}
         >
           Years
         </button>

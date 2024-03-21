@@ -2,7 +2,7 @@
     display: grid;
     grid-template-columns: auto repeat(3, 1fr); /*4 cloumns*/
     grid-template-rows: auto repeat(2, 1fr);  ; /*3 rows*/
-    grid-gap: 5px;
+    grid-gap: 10px;
     height: 100vh;
   }
   

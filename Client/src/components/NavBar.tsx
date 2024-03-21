@@ -2,9 +2,14 @@
 import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
+import dsh from "../assets/dashico.png";
+import log from "../assets/logico.png";
+import stat from "../assets/Statico.png";
+import { useLocation } from "react-router-dom";
 import "./NavBar.css";
 
 function NavBar() {
+  const location = useLocation();
   return (
     <Navbar
       bg="light"
@@ -15,20 +20,35 @@ function NavBar() {
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto flex-column font text-dark">
-            <Nav.Link href="/" className="nav-link py-3 px-4 text-dark fw-bold">
-              Dashboard
+            <Nav.Link
+              href="/"
+              className={location.pathname === "/" ? "active" : ""}
+            >
+              <img
+                src={dsh}
+                alt="Dashboard"
+                className="holder py-3 px-4 text-dark fw-bold"
+              />
             </Nav.Link>
             <Nav.Link
               href="/statistics"
-              className="nav-link py-3 px-4 text-dark fw-bold"
+              className={location.pathname === "/statistics" ? "active" : ""}
             >
-              Statistics
+              <img
+                src={stat}
+                alt="Statistics"
+                className="holder py-3 px-4 text-dark fw-bold"
+              />
             </Nav.Link>
             <Nav.Link
               href="/logs"
-              className="nav-link py-3 px-4 text-dark fw-bold"
+              className={location.pathname === "/logs" ? "active" : ""}
             >
-              Logs
+              <img
+                src={log}
+                alt="Logs"
+                className="holder py-3 px-4 text-dark fw-bold"
+              />
             </Nav.Link>
           </Nav>
         </Navbar.Collapse>
