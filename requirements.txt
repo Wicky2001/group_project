@@ -1,0 +1,6 @@
+Flask==3.0
+Flask-RESTful ==0.3.10
+Flask-SQLAlchemy==3.1.0
+marshmallow==3.14.0
+flask-cors==4.0.0
+mysqlclient==2.2.4
