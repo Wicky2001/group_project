@@ -1,5 +1,15 @@
 #root{
-    height: 100%;
-    background-color: #F2F2F7;
+    --d-theme:1;
 
+    background-color: #F2F2F7;
+    
+    --w-font1:#000;
+    --w-font2:#fff;
+    --w-bg1: #fff;
+    --w-bg2: #000;
+
+    --green1:#31F78C;
+    --red1:#ff6b6b;
+    --d-font1:#fff;
+    --d-bg1: #000;
 }

@@ -38,13 +38,13 @@
 }
 
 .entered {
-  border: 3px solid;
-  border-color: #31F78C;
+  border: 2px solid black;
+
 }
 
 .left {
-  border: 3px solid;
-  border-color: #ff6b6b;
+  border: 2px solid black;
+
 }
 
 .in-premise {
@@ -52,5 +52,5 @@
 }
 
 .anomalies {
-  border: 3px solid black;
+  border: 2px solid black;
 }
