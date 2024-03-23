@@ -20,8 +20,10 @@ from sqlalchemy import func
 app = Flask(__name__)
 api = Api(app)
 CORS(app)
-
-app.config['SQLALCHEMY_DATABASE_URI'] = "mysql://root@localhost:3306/vehicals"
+#app.config['SQLALCHEMY_DATABASE_URI'] = "mysql://username:password@hostname/detections?charset=utf8mb4"
+#changed
+app.config['SQLALCHEMY_DATABASE_URI'] = "mysql://root@localhost/detections?charset=utf8mb4"
+#app.config['SQLALCHEMY_DATABASE_URI'] = "mysql://root@localhost:3306/detections"
 db = SQLAlchemy(app)
 
 
@@ -44,7 +46,7 @@ class detections(db.Model):
 class lastEntries(Resource):
     def get(self):
         print("Request received")
-        lastEnteredEntries = detections.query.order_by(detections.id.desc()).first(10)
+        lastEnteredEntries = detections.query.order_by(detections.id.desc()).limit(5).all()
 
         if not lastEnteredEntries:
             abort(404, message="Couldn't find an entry")
@@ -70,7 +72,7 @@ class lastEntries(Resource):
         response={
             'length':len(result),
             'result':result,
-            'lastimg': lastEnteredEntries[0].img if lastEnteredEntries else None,
+           # 'lastimg': lastEnteredEntries[0].img if lastEnteredEntries else None,
         }
 
         return response
@@ -762,6 +764,7 @@ api.add_resource(addEntry,"/addEntry")
 
 
 if __name__ == "__main__":
-    app.run(debug=True, port=5001)
+    #changed
+    app.run(debug=True, port=5002)
     print("Server is running...")
 

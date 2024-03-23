@@ -18,11 +18,11 @@ const ManualEntry: React.FC = () => {
     setStatus(newStatus);
   };
 
-  const handleClear = () => {
-    setNumberPlate("");
-    setVehicleType("");
-    setStatus("IN");
-  };
+  // const handleClear = () => {
+  //   setNumberPlate("");
+  //   setVehicleType("");
+  //   setStatus("IN");
+  // };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
