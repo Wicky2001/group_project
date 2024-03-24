@@ -44,7 +44,7 @@
 }
 
 .font .nav-link {
-  border-radius: 20px !important;
+  border-radius: 999px !important;
   margin:5px 2px;
   padding: 2px  !important;
 }
@@ -54,6 +54,8 @@
   text-decoration: none !important;
 }
 .active {
+  box-shadow: #54ee9c 0px 0px 20px !important;
   background-color: #31F78C !important;
+  inline-size: none;
 }
 
