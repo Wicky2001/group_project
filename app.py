@@ -61,7 +61,7 @@ class lastEntries(Resource):
                     'minute': entry.minute,
                     'second': entry.second,
                 },
-                'number_plate': entry.number_plate,
+                'raw_number_plate': entry.number_plate,
                 'vehicle_type':entry.vehicle_type,
                 'status': entry.in_or_out
             }
@@ -91,7 +91,7 @@ class Search(Resource):
         number_plate = request.args.get('numberPlate')
 
         # Validate data using Schema's validate method
-        errors = schema.validate({'day': day, 'number_plate': number_plate}, partial=True)
+        errors = schema.validate({'day': day, 'raw_number_plate': number_plate}, partial=True)
         if errors:
             print(errors)
             return {'error': str(errors)}, 400  # Bad Request
@@ -111,7 +111,7 @@ class Search(Resource):
                     'minute': entry.minute,
                     'second': entry.second
                 },
-                'number_plate': entry.number_plate,
+                'raw_number_plate': entry.number_plate,
                 'vehicle_type': entry.vehicle_type,
                 'status':entry.in_or_out
             }
@@ -327,7 +327,7 @@ class searchByDate(Resource):
                                 'minute': entry.minute,
                                 'second': entry.second
                             },
-                            'number_plate': entry.number_plate,
+                            'raw_number_plate': entry.number_plate,
                             'vehicle_type': entry.vehicle_type,
                             'status': entry.in_or_out
                         }
@@ -346,7 +346,7 @@ class searchByDate(Resource):
                                             'minute': entry.minute,
                                             'second': entry.second
                                         },
-                                        'number_plate': entry.number_plate,
+                                        'raw_number_plate': entry.number_plate,
                                         'vehicle_type': entry.vehicle_type,
                                         'status': entry.in_or_out
                                     }
@@ -364,7 +364,7 @@ class searchByDate(Resource):
                                         'minute': entry.minute,
                                         'second': entry.second
                                     },
-                                    'number_plate': entry.number_plate,
+                                    'raw_number_plate': entry.number_plate,
                                     'vehicle_type': entry.vehicle_type,
                                     'status': entry.in_or_out
                                 }

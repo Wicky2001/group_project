@@ -1,0 +1,41 @@
+number_plate = ML8036 confidence_score = 0.12915346184774942
+number_plate = KL6036 confidence_score = 0.6947135920224332
+number_plate = KL6036 confidence_score = 0.5682822634482311
+number_plate = KL6036 confidence_score = 0.502532398065452 changes =  date&time = 2024-03-24_16-09-20
+number_plate = KL6036 confidence_score = 0.6155812470389859 changes = add adaptive thresh block size:21 c:30 date&time = 2024-03-24_16-16-54
+-----------------------------
+number_plate = KI9119 confidence_score = 0.828165129857239 changes = add adaptive thresh block size:21 c:30 date&time = 2024-03-24_16-18-31
+-----------------------------
+number_plate = GKI9112 confidence_score = 0.4874033991920313 changes = add adaptive thresh block size:21 c:30 date&time = 2024-03-24_16-18-48
+number_plate = EKI9119 confidence_score = 0.3983535849759628 changes = add adaptive thresh block size:21 c:30 date&time = 2024-03-24_16-19-01
+number_plate = PKI9112 confidence_score = 0.48102119017392375 changes = add adaptive thresh block size:21 c:30 date&time = 2024-03-24_16-19-24
+number_plate = PKI9119 confidence_score = 0.38254538801557386 changes = add adaptive thresh block size:21 c:30 date&time = 2024-03-24_16-22-14
+number_plate = KI2119 confidence_score = 0.27582171219776097 changes = add adaptive thresh block size:21 c:30 date&time = 2024-03-24_16-22-38
+number_plate = CKI9119 confidence_score = 0.32800444757526165 changes = add adaptive thresh block size:21 c:30 date&time = 2024-03-24_16-23-36
+number_plate = KI2112 confidence_score = 0.17751106119607768 changes = add adaptive thresh block size:21 c:30 date&time = 2024-03-24_16-24-53
+number_plate = PKI9119 confidence_score = 0.6184973819318349 changes = add adaptive thresh block size:21 c:30 date&time = 2024-03-24_16-25-09
+number_plate = PKI911 confidence_score = 0.9441977851517733 changes = add adaptive thresh block size:21 c:30 date&time = 2024-03-24_16-27-20
+number_plate = PKI9119 confidence_score = 0.8574409139238661 changes = add adaptive thresh block size:21 c:30 date&time = 2024-03-24_16-27-36
+number_plate = KKI2112 confidence_score = 0.20335030137316273 changes = add adaptive thresh block size:21 c:30 date&time = 2024-03-24_16-27-56
+number_plate = KL6036 confidence_score = 0.3426969796702616 changes = add adaptive thresh block size:21 c:30 date&time = 2024-03-24_17-22-25
+number_plate = GKL6026 confidence_score = 0.22562446925284832 changes = add adaptive thresh block size:21 c:30 date&time = 2024-03-24_17-24-17
+number_plate = GKL8028 confidence_score = 0.21051054317043053 changes = add adaptive thresh block size:21 c:30 date&time = 2024-03-24_17-24-17
+number_plate = KL6036 confidence_score = 0.508102674326574 changes = add adaptive thresh block size:21 c:30 date&time = 2024-03-24_17-25-28
+number_plate = KL6036 confidence_score = 0.6417017399919597 changes = add adaptive thresh block size:21 c:30 date&time = 2024-03-24_17-26-06
+number_plate = KL60361 confidence_score = 0.7230772784239702 changes = add adaptive thresh block size:21 c:30 date&time = 2024-03-24_17-26-22
+number_plate = KL60367 confidence_score = 0.4606940802867977 changes = add adaptive thresh block size:21 c:30 date&time = 2024-03-24_17-26-39
+number_plate = KL6036 confidence_score = 0.48244261888190804 changes = add adaptive thresh block size:21 c:30 date&time = 2024-03-24_17-26-54
+number_plate = KL6036 confidence_score = 0.38354790303774416 changes = add adaptive thresh block size:21 c:30 date&time = 2024-03-24_17-29-10
+number_plate = KL6036 confidence_score = 0.9878097384462826 changes = add adaptive thresh block size:21 c:30 date&time = 2024-03-24_17-29-22
+number_plate = KL6036 confidence_score = 0.8206253438147177 changes = add adaptive thresh block size:21 c:30 date&time = 2024-03-24_17-29-39
+number_plate = KL6036 confidence_score = 0.22673400842328226 changes = add adaptive thresh block size:21 c:30 date&time = 2024-03-24_17-34-23
+number_plate = KL60361 confidence_score = 0.3092024400771105 changes = add adaptive thresh block size:21 c:30 date&time = 2024-03-24_17-34-35
+number_plate = KL6036 confidence_score = 0.7010016984569266 changes = add adaptive thresh block size:21 c:30 date&time = 2024-03-24_17-34-49
+number_plate = KL6036 confidence_score = 0.926719215342881 changes = add adaptive thresh block size:21 c:30 date&time = 2024-03-24_17-35-13
+number_plate = KL60361 confidence_score = 0.40234911842662424 changes = add adaptive thresh block size:21 c:30 date&time = 2024-03-24_17-35-25
+number_plate = KL6036 confidence_score = 0.897793942149646 changes = add adaptive thresh block size:21 c:30 date&time = 2024-03-24_17-36-12
+number_plate = KGR0251 confidence_score = 0.23487525835090853 changes = add adaptive thresh block size:21 c:30 date&time = 2024-03-24_18-02-08
+number_plate = GR0251 confidence_score = 0.6677522937787916 changes = add adaptive thresh block size:21 c:30 date&time = 2024-03-24_18-02-47
+number_plate = HGR0251 confidence_score = 0.5086343370236843 changes = add adaptive thresh block size:21 c:30 date&time = 2024-03-24_18-03-00
+number_plate = GR0251 confidence_score = 0.5996106956696179 changes = add adaptive thresh block size:21 c:30 date&time = 2024-03-24_18-03-13
+number_plate = GR0251 confidence_score = 0.5090623377265502 changes = add adaptive thresh block size:21 c:30 date&time = 2024-03-24_18-03-44
