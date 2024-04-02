@@ -11,7 +11,7 @@ interface FormData {
 const ManualEntry: React.FC = () => {
   const [formData, setFormData] = useState<FormData>({
     numberPlate: "",
-    vehicleType: "OTHER",
+    vehicleType: "Other",
     status: "IN",
   });
   const [currentTime, setCurrentTime] = useState(new Date());
@@ -122,7 +122,7 @@ const ManualEntry: React.FC = () => {
             <button
               type="button"
               className={`status-button ${
-                formData.status === "OUT" ? "activered" : ""
+                formData.status === "OUT" ? "activred" : ""
               }`}
               onClick={() => handleStatusChange("OUT")}
             >

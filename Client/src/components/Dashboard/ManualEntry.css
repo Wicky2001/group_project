@@ -27,8 +27,8 @@
   .timestamp {
     background-color:var(--w-font1);
     color: var(--w-bg1);
-    padding: 5px 10px;
-    border-radius: 4px;
+    padding: 5px 12px;
+    border-radius: 20px;
     font-size: 14px;
     font-weight: bold;
     margin-left: 10px;
@@ -83,6 +83,7 @@
     background-color:var(--red1);
     color: var(--w-font1);
   }
+  
   .form-actions {
     display: flex;
     justify-content:end;
@@ -116,3 +117,4 @@
     color:var(--w-font1);
     background-color:var(--green1);
  }
+
