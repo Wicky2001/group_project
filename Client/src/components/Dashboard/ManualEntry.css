@@ -27,8 +27,8 @@
   .timestamp {
     background-color:var(--w-font1);
     color: var(--w-bg1);
-    padding: 5px 10px;
-    border-radius: 4px;
+    padding: 5px 12px;
+    border-radius: 20px;
     font-size: 14px;
     font-weight: bold;
     margin-left: 10px;
@@ -49,7 +49,7 @@
     width: 120px;
   }
   
-  .form-group input {
+  .form-group input, select, option {
     flex: 1;
     padding: 8px 12px;
     border: 2px solid var(--w-font1);
@@ -75,14 +75,15 @@
     cursor: pointer;
   }
   
-  .status-button.active {
+  .status-button.activegre {
     background-color:var(--green1);
     color: var(--w-font1);
   }
-  .status-button.activered {
+  .status-button.activred {
     background-color:var(--red1);
     color: var(--w-font1);
   }
+  
   .form-actions {
     display: flex;
     justify-content:end;
@@ -116,3 +117,4 @@
     color:var(--w-font1);
     background-color:var(--green1);
  }
+
