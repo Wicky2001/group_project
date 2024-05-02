@@ -4,7 +4,7 @@ from flask import Flask, request,jsonify
 from flask_restful import Resource, Api, abort
 import threading
 from flask_sqlalchemy import SQLAlchemy
-from marshmallow import Schema, fields, ValidationError
+from marshmallow import Schema, fields, ValidationError, validates_schema
 from flask_cors import CORS
 from datetime import datetime
 from sqlalchemy import and_, or_
@@ -23,7 +23,7 @@ api = Api(app)
 CORS(app)
 #app.config['SQLALCHEMY_DATABASE_URI'] = "mysql://username:password@hostname/detections?charset=utf8mb4"
 #changed
-app.config['SQLALCHEMY_DATABASE_URI'] = "mysql://root@localhost/detections?charset=utf8mb4"
+app.config['SQLALCHEMY_DATABASE_URI'] = "mysql://root@localhost/vehicals?charset=utf8mb4"
 #app.config['SQLALCHEMY_DATABASE_URI'] = "mysql://root@localhost:3306/detections"
 db = SQLAlchemy(app)
 
@@ -784,12 +784,51 @@ class addEntry(Resource):
 
 
 
+class sortTrafficSchema(Schema):
+    hour = fields.Boolean(required=False)
+    month = fields.Boolean(required=False)
+    year = fields.Boolean(required=False)
+
+    @validates_schema
+    def validate_params(self, data, **kwargs):
+        if not any(data.values()):
+            raise ValidationError("At least one  field is required")
+
+        true_count = sum(value for value in data.values())
+        if true_count > 1:
+            raise ValidationError("Only one query parameter can be true at a time")
+
+class sortTraffic(Resource):
+    def get(self):
+        # Parse and validate query parameters
+        schema = sortTrafficSchema()
+        try:
+            args = schema.load(request.args)
+        except ValidationError as err:
+            return {"message": err.messages}, 400
+
+
+        requestObjWithParams = request.args.to_dict()
+
+        true_params = [key for key, value in requestObjWithParams.items() if value.lower() == 'true']
+
+        # query = detections.query.filter_by(**{param: True for param in true_params})
+
+        grouped_data = detections.query.group_by(getattr(detections, true_params[0])).with_entities(
+        getattr(detections, true_params[0]), func.count()).all()
+
+        formatted_data = [(row[0], row[1]) for row in grouped_data]
+
+        return {
+            "grouped_data": formatted_data
+        }, 200
+
 api.add_resource(lastEntries, "/lastEntry")
 api.add_resource(TodaySummary, "/daysummary")
 api.add_resource(Search, "/Search")
 api.add_resource(searchByDate, "/searchByDate")
 api.add_resource(addEntry,"/addEntry")
-
+api.add_resource(sortTraffic,"/sortTraffic")
 
 
 if __name__ == "__main__":
