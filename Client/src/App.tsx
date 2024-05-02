@@ -1,55 +1,20 @@
-import React, { useEffect, useState } from "react";
-import { detection, useData } from "./Hooks/useData";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+//import NavBar from "./components/NavBar";
+import Dashboard from "./components/Dashboard/Dashboard";
+import Statistics from "./components/Statistics/Statistics";
+import Logs from "./components/Logs/Logs";
+import "./App.css";
 
-const App = () => {
-  const [toggle, setToggle] = useState(true);
-  // useEffect(() => {
-  // const fetchData = async () => {
-  //   try {
-  //     const response = await fetch("http://127.0.0.1:5001/lastEntry", {
-  //       method: "GET",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //         // Add any other required headers
-  //       },
-  //       // Add body if needed
-  //     });
-
-  //     if (!response.ok) {
-  //       throw new Error("Network response was not ok");
-  //     }
-  //     console.log("hhhh");
-  //     // Handle the response data
-  //     const data = await response.json();
-  //     console.log(data);
-  //   } catch (error) {
-  //     console.error("Error fetching data:", error);
-  //   }
-  // };
-
-  // fetchData();
-  // }, []);
-
-  const { Data } = useData<detection>("/lastEntry", toggle);
-
+function App() {
   return (
-    <div>
-      {/* <button
-        onClick={() => {
-          setToggle(!toggle);
-        }}
-        style={{ backgroundColor: "red" }}
-      >
-        click
-      </button> */}
-      {Data && (
-        <div>
-          <h2>API Response:</h2>
-          <pre>{Data.number_plate}</pre>
-        </div>
-      )}
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Dashboard />} />{" "}
+        <Route path="/statistics" element={<Statistics />} />{" "}
+        <Route path="/logs" element={<Logs />} />{" "}
+      </Routes>
+    </BrowserRouter>
   );
-};
+}
 
 export default App;

@@ -1,6 +1,8 @@
 <<<<<<< HEAD
 # Ignore compiled Python files
 *.pyc
+detected_vehicle_plate/
+detected_vehicles_images/
 
 # Ignore virtual environment directories
 venv/
@@ -8,8 +10,8 @@ venv/
 # Ignore IDE specific files
 .vscode/
 
-model/cv2t.py
-model/add_missing_data.py
+models/in_gate_model/cv2t.py
+models/in_gate_model/add_missing_data.py
 =======
 # Byte-compiled / optimized / DLL files
 __pycache__/

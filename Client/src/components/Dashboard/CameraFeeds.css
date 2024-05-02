@@ -1,0 +1,13 @@
+.container {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin-top: 10px;
+    height: 97%;
+    background-color: rgb(0, 0, 0);
+    box-shadow: 0px 8px 16px rgba(50.10, 50.10, 71.27, 0.06);
+    border-radius: 20px;
+    overflow: hidden;
+    padding: 20px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+  }
