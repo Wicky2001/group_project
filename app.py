@@ -746,7 +746,7 @@ class addEntry(Resource):
             entry = detections(year=entryYear,month=entryMonth,date=entryDay ,hour=entryHour,minute=entryMinute,second=entrySecond ,in_or_out=in_or_out,  number_plate =numberPlate, vehicle_type=vehicleType)
 
             db.session.add(entry)
-            db.session.commit()
+            # db.session.commit()
 
 
             return {'message': 'Entry added successfully'}, 201  # HTTP status code 201 for Created
@@ -754,10 +754,13 @@ class addEntry(Resource):
             # Handle validation errors
             return {'message': 'Validation error', 'errors': e.messages}, 400  # HTTP status code 400 for Bad Request
 
+
+
 api.add_resource(lastEntries, "/lastEntry")
 api.add_resource(Search, "/Search")
 api.add_resource(searchByDate, "/searchByDate")
 api.add_resource(addEntry,"/addEntry")
+
 
 
 if __name__ == "__main__":
