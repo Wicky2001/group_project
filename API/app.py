@@ -812,15 +812,22 @@ class sortTraffic(Resource):
 
         true_params = [key for key, value in requestObjWithParams.items() if value.lower() == 'true']
 
-        # query = detections.query.filter_by(**{param: True for param in true_params})
 
-        grouped_data = detections.query.group_by(getattr(detections, true_params[0])).with_entities(
-        getattr(detections, true_params[0]), func.count()).all()
 
-        formatted_data = [(row[0], row[1]) for row in grouped_data]
+        grouped_data = detections.query.group_by(getattr(detections, true_params[0]),detections.in_or_out).with_entities(
+        getattr(detections, true_params[0]),detections.in_or_out, func.count().label("total")).all()
+
+        # formatted_data = [(row[0], row[1],row[2]) for row in grouped_data]
+        summary = []
+        for row in grouped_data:
+            summary.append({
+                true_params[0]: row[0],
+                "status": row[1],
+                "total": row[2]
+            })
 
         return {
-            "grouped_data": formatted_data
+            "summary": summary
         }, 200
 
 api.add_resource(lastEntries, "/lastEntry")
