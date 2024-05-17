@@ -1,0 +1,61 @@
+/* Styles for the bar graph container */
+.bar-graph {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    width: 100%;
+  }
+
+  .bar-container{
+    width: 100%;
+    font-size: 16px;
+    font-weight: 600;
+    font-family: 'Poppins', sans-serif;
+    color: black;
+  }
+  
+  /* Styles for individual bars */
+  .bar {
+    display: flex;
+    align-items: center;
+    /* justify-content: left; Ensure bars are at the start and labels at the end */
+    align-items: center;
+    width: 100%;
+    margin-bottom: 8px;
+    background-color: #ffffff; 
+    height: 50%;
+  }
+  
+  .bar span:first-child {
+    width: 110px; /* Adjust this value as needed */
+    text-align: left;
+    margin-right: 16px; /* Adjust this value as needed */
+  }
+
+  /* Styles for the 'inCount' and 'outCount' bars */
+  .bar-in,
+  .bar-out {
+    height: 100%; /* Fixed height for consistency */
+    border-radius: 5px; /* Rounded corners for the bars */
+  }
+  
+  /* Styles for the 'inCount' bar */
+  .bar-in {
+    flex-grow: 3; /* Allow bar to expand to fill available space */
+    background-color: #31F78C;
+  }
+  
+  /* Styles for the 'outCount' bar */
+  .bar-out {
+    flex-grow: 3; /* Allow bar to expand to fill available space */
+    background-color: #ff6b6b;
+  }
+  
+  /* Styles for bar labels */
+  .label {
+    font-weight: bold;
+    margin-right: 10px; /* Add spacing between label and bars */
+  }
+  
+  

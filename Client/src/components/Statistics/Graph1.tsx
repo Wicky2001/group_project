@@ -1,5 +1,6 @@
 import React from "react";
 import "./Graph1.css";
+import BarGraph from "./BarGraph";
 
 interface TrafficData {
   type: string;
@@ -7,14 +8,38 @@ interface TrafficData {
   outCount: number;
 }
 
-const Graph1: React.FC = () => {
-  const trafficData: TrafficData[] = [
-    { type: "Cars", inCount: 880, outCount: 850 },
-    { type: "Vans", inCount: 700, outCount: 700 },
-    { type: "Trucks", inCount: 150, outCount: 150 },
-    { type: "Bikes", inCount: 80, outCount: 80 },
-    { type: "Other", inCount: 200, outCount: 200 },
-  ];
+interface ResponseData {
+  status: string;
+  total: number;
+  vehicle_type: string;
+}
+
+const Graph1: React.FC<{ responseData: ResponseData[] }> = ({
+  responseData,
+}) => {
+  // Transform the response data into the format expected by Graph1
+  const trafficData: TrafficData[] = responseData.reduce(
+    (acc: TrafficData[], item) => {
+      const vehicleType = item.vehicle_type.trim() || "Other";
+      const existingIndex = acc.findIndex((data) => data.type === vehicleType);
+      if (existingIndex !== -1) {
+        if (item.status === "IN") {
+          acc[existingIndex].inCount += item.total;
+        } else if (item.status === "OUT") {
+          acc[existingIndex].outCount += item.total;
+        }
+      } else {
+        const newItem: TrafficData = {
+          type: vehicleType,
+          inCount: item.status === "IN" ? item.total : 0,
+          outCount: item.status === "OUT" ? item.total : 0,
+        };
+        acc.push(newItem);
+      }
+      return acc;
+    },
+    []
+  );
 
   return (
     <>
@@ -33,35 +58,9 @@ const Graph1: React.FC = () => {
             </div>
           ))}
         </div>
-        <div className="chart">
-          <div className="axis">
-            <span>0</span>
-            <span>200</span>
-            <span>400</span>
-            <span>600</span>
-            <span>800</span>
-            <span>1000</span>
-          </div>
-          <div className="bars">
-            {trafficData.map((data) => (
-              <div key={data.type} className="bar-group">
-                <div
-                  className="bar out"
-                  style={{ height: `${(data.outCount / 1000) * 100}%` }}
-                ></div>
-                <div
-                  className="bar in"
-                  style={{ height: `${(data.inCount / 1000) * 100}%` }}
-                ></div>
-              </div>
-            ))}
-          </div>
-          <div className="legend">
-            <span className="in-legend"></span>
-            <span>In</span>
-            <span className="out-legend"></span>
-            <span>Out</span>
-          </div>
+        <div className="bar-graph-container">
+          {/* Render the BarGraph component with trafficData */}
+          <BarGraph trafficData={trafficData} />
         </div>
       </div>
     </>
