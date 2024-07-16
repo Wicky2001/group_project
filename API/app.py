@@ -21,9 +21,9 @@ from sqlalchemy import func
 app = Flask(__name__)
 api = Api(app)
 CORS(app)
-#app.config['SQLALCHEMY_DATABASE_URI'] = "mysql://username:password@hostname/detections?charset=utf8mb4"
+app.config['SQLALCHEMY_DATABASE_URI'] = "mysql://root:Mysql%40123@localhost/detections?charset=utf8mb4"
 #changed
-app.config['SQLALCHEMY_DATABASE_URI'] = "mysql://root@localhost/detections?charset=utf8mb4"
+#app.config['SQLALCHEMY_DATABASE_URI'] = "mysql://root@localhost/detections?charset=utf8mb4"
 #app.config['SQLALCHEMY_DATABASE_URI'] = "mysql://root@localhost:3306/detections"
 db = SQLAlchemy(app)
 
