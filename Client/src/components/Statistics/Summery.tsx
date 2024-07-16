@@ -1,29 +1,25 @@
 import React from "react";
 import "./Summery.css";
 
+// Summery component
 interface SummeryProps {
-  totalEntered: number;
-  totalLeft: number;
-  stillInPremise: number;
-  anomalies: number;
+  summaryData: { totalIn: number; totalOut: number };
 }
 
-const Summery: React.FC<SummeryProps> = ({
-  totalEntered,
-  totalLeft,
-  stillInPremise,
-  anomalies,
-}) => {
+const Summery: React.FC<SummeryProps> = ({ summaryData }) => {
+  const { totalIn, totalOut } = summaryData;
+  const stillInPremise = totalIn - totalOut;
+
   return (
     <div className="summery">
-      <h2>Summery</h2>
+      <h2>Summary</h2>
       <div className="summery-item">
         <span className="label">Total Entered</span>
-        <div className="value entered">{totalEntered}</div>
+        <div className="value entered">{totalIn}</div>
       </div>
       <div className="summery-item">
         <span className="label">Total Left</span>
-        <div className="value left">{totalLeft}</div>
+        <div className="value left">{totalOut}</div>
       </div>
       <div className="summery-item">
         <span className="label">Still In Premise</span>
@@ -31,7 +27,7 @@ const Summery: React.FC<SummeryProps> = ({
       </div>
       <div className="summery-item">
         <span className="label">Anomalies</span>
-        <div className="value anomalies">{anomalies}</div>
+        <div className="value anomalies">N/A</div>
       </div>
     </div>
   );
