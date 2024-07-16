@@ -1,5 +1,5 @@
 
-# import marshmallow
+import marshmallow
 from flask import Flask, request,jsonify
 from flask_restful import Resource, Api, abort
 import threading
@@ -8,6 +8,7 @@ from marshmallow import Schema, fields, ValidationError
 from flask_cors import CORS
 from datetime import datetime
 from sqlalchemy import and_, or_
+
 # import sys
 import os
 
@@ -20,8 +21,10 @@ from sqlalchemy import func
 app = Flask(__name__)
 api = Api(app)
 CORS(app)
-
-app.config['SQLALCHEMY_DATABASE_URI'] = "mysql://root@localhost:3306/vehicals"
+#app.config['SQLALCHEMY_DATABASE_URI'] = "mysql://username:password@hostname/detections?charset=utf8mb4"
+#changed
+app.config['SQLALCHEMY_DATABASE_URI'] = "mysql://root@localhost/detections?charset=utf8mb4"
+#app.config['SQLALCHEMY_DATABASE_URI'] = "mysql://root@localhost:3306/detections"
 db = SQLAlchemy(app)
 
 
@@ -44,7 +47,7 @@ class detections(db.Model):
 class lastEntries(Resource):
     def get(self):
         print("Request received")
-        lastEnteredEntries = detections.query.order_by(detections.id.desc()).first(10)
+        lastEnteredEntries = detections.query.order_by(detections.id.desc()).limit(4 ).all()
 
         if not lastEnteredEntries:
             abort(404, message="Couldn't find an entry")
@@ -70,10 +73,40 @@ class lastEntries(Resource):
         response={
             'length':len(result),
             'result':result,
-            'lastimg': lastEnteredEntries[0].img if lastEnteredEntries else None,
+           # 'lastimg': lastEnteredEntries[0].img if lastEnteredEntries else None,
         }
 
         return response
+
+class TodaySummary(Resource):
+    def get(self):
+        today = datetime.now()
+        today_entries = detections.query.filter(
+            detections.year == today.year,
+            db.cast(detections.month, db.Integer) == today.month,
+            db.cast(detections.date, db.Integer) == today.day
+        ).all()
+
+        if not today_entries:
+            abort(404, message="No entries found for today")
+
+        total_entered = sum(
+            1 for entry in today_entries if entry.in_or_out.upper() == "IN"
+        )
+        total_left = sum(
+            1 for entry in today_entries if entry.in_or_out.upper() == "OUT"
+        )
+        still_in_premise = total_entered - total_left
+
+        summary = {
+            "total_entered": total_entered,
+            "total_left": total_left,
+            "still_in_premise": still_in_premise,
+            "anomalies": 0 # Keep commented for future development
+        }
+
+        return summary
+
 
 class SearchSchema(Schema):
     day = fields.Str(required=False, allow_none=True)
@@ -693,18 +726,12 @@ class searchByDate(Resource):
 
 
 
-
-
-
-
-
 class addEntrySchema(Schema):
     entryDate = fields.Date(required=True)
     entryTime = fields.Time(required=True)
     status = fields.String(required=False)
     numberPlate = fields.String(required=True)
     vehicleType = fields.String(required=False)
-
 
 
 class addEntry(Resource):
@@ -756,12 +783,14 @@ class addEntry(Resource):
             return {'message': 'Validation error', 'errors': e.messages}, 400  # HTTP status code 400 for Bad Request
 
 api.add_resource(lastEntries, "/lastEntry")
+api.add_resource(TodaySummary, "/daysummary")
 api.add_resource(Search, "/Search")
 api.add_resource(searchByDate, "/searchByDate")
 api.add_resource(addEntry,"/addEntry")
 
 
 if __name__ == "__main__":
-    app.run(debug=True, port=5001)
+    #changed
+    app.run(debug=True, port=5002)
     print("Server is running...")
 

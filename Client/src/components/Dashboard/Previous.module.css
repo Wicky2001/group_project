@@ -1,3 +1,4 @@
+
 .container {
   margin-top: 10px;
   margin-right: 10px;
@@ -16,13 +17,17 @@
     color: var(--w-font1);;
     margin-bottom: 10px;
   }
+  .scrollContainer {
+    max-height: 320px; /* Adjust the height as needed */
+    overflow-y: auto;
+  }
   
   .entriesContainer {
     display: flex;
     flex-direction: column;
     gap: 10px;
   }
-  
+
   .entryContainer {
     border: 1px solid var(--w-font1);;
     display: flex;
@@ -40,6 +45,7 @@
   }
   
   .date,
+  .time,
   .numberPlate,
   .vehicleType {
     font-size: 16px;
@@ -47,6 +53,17 @@
     font-family: 'Arial Rounded MT Bold', sans-serif;
     color: var(--w-font1);;
   }
+  .time{
+    font-weight: 600;
+  }
+.numberPlate{
+  padding:  5px 10px;
+  border-radius: 8px;
+  font-weight: 600;
+  background-color: #ffc107;
+}
+  
+
   
   .statusIndicator {
     border: 1px solid var(--w-font1);;

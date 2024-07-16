@@ -12,7 +12,7 @@
   display: flex;
   align-content: flex-start;
   justify-content: space-between;
-  align-items: flex-start;
+  align-items: center;
 }
 
 .header {
@@ -36,14 +36,15 @@
 }
 
 .timestamp {
-  background-color:var(--w-bg2);;
-  color: var(--w-font2);
-  padding: 5px 10px;
-  border-radius: 4px;
+  background-color:var(--w-font1);
+  color: var(--w-bg1);
+  padding: 5px 20px;
+  border-radius: 20px;
   font-size: 14px;
   font-weight: bold;
   margin-left: 10px;
 }
+
 
 .detailsContainer {
   width: 50%;
@@ -66,6 +67,7 @@
 }
 
 .value {
+  background-color: #F2F2F7;
   font-size: 16px;
   width: 50%;
   font-weight: 600;
@@ -74,10 +76,13 @@
   padding: 5px 10px;
 }
 
+
 .valueRounded {
-  background-color: white;
   border-radius: 20px;
-  border: 1px solid var(--w-font1);;
+  border: 1px solid black;
+}
+.vtype{
+  /* background-color:#ffc107 ; */
 }
 
 .valueGreen {
@@ -87,7 +92,7 @@
 }
 
 .valueRed {
-  background-color: var(--red2);
+  background-color: var(--red1);
   border-radius: 20px;
   color: var(--w-font1);;
 }
@@ -100,7 +105,12 @@
   
 
 }
+img{
+  height: 100%;
+  object-fit: cover;
+  border-radius: 20px;
 
+}
 .vehicleImage {
   margin-left: 10px;
   border-radius: 20px;
