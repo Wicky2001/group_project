@@ -59,9 +59,9 @@ const Statistics: React.FC = () => {
         <div className={StatStyle.chart2}>
           <Graph1 responseData={graph1Data} />
         </div>
-        {/* <div className={StatStyle.chart3}>
+        <div className={StatStyle.chart3}>
           <Graph2 />
-        </div> */}
+        </div>
       </div>
     </>
   );

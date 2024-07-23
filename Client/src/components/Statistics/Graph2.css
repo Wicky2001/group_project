@@ -1,128 +1,128 @@
 .traffic-chart {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: white;
-    box-shadow: 0px 8px 16px rgba(50.10, 50.10, 71.27, 0.06);
-    border-radius: 20px;
-    overflow: hidden;
-    padding: 20px;
-    margin: 0 auto; /* Center the chart */
-    display: flex;
-    height: 100%;
-    align-items: center;
-  }
-  
-  .sort-traffic {
-    flex-direction: column;
-    display: flex;
-    justify-content: space-evenly;
-    margin-bottom: 20px; /* Increase the bottom margin */
-  }
-  
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: white;
+  box-shadow: 0px 8px 16px rgba(50.10, 50.10, 71.27, 0.06);
+  border-radius: 20px;
+  overflow: hidden;
+  padding: 20px;
+  margin: 0 auto; /* Center the chart */
+  display: flex;
+  height: 100%;
+  align-items: center;
+}
 
-  .sort-traffic button {
-    padding: 0.5rem 1rem;
-    font-size: 1rem;
-    font-weight: 700;
-    background-color: #fff;
-    color: Black;
-    border: 2px solid black;
-    border-radius: 20px;
-    cursor: pointer;
-    margin: 0 2rem 1rem 0;
+.sort-traffic {
+  flex-direction: column;
+  display: flex;
+  justify-content: space-evenly;
+  margin-bottom: 20px; /* Increase the bottom margin */
+}
 
-  }
-  
-  .sort-traffic button:hover {
-    color: black;
-    background-color: #31F78C;
-  }
-  .sort-traffic button.active1  {
-    color: #31F78C;
-    background-color: Black;
-  }
 
-  
-  .chart-container {
-    display: flex;
-    align-items: flex-end;
-  }
-  
-  .y-axis {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    height: 200px;
-    margin-right: 20px; /* Increase the right margin */
-  }
-  
-  .y-axis-label {
-    color: #888;
-    font-size: 12px;
-    text-align: right;
-    width: 40px; /* Increase the width */
-  }
-  
-  .bars {
-    display: flex;
-    justify-content: space-between;
-    width: 100%;
-    height: 200px;
-    align-items: flex-end;
-  }
-  
-  .bar-group {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 40px;
-    margin: 0 5px; /* Add some spacing between bar groups */
-  }
-  
-  .bar {
-    width: 20px;
-    margin-bottom: 5px;
-    border-radius: 2px; /* Add a slight border radius */
-    transition: all 0.3s ease; /* Add a transition effect */
-  }
-  
-  .bar.in {
-    background-color: #2196f3;
-  }
-  
-  .bar.out {
-    background-color: #ff9800;
-  }
-  
-  .bar-label {
-    font-size: 12px;
-    color: #888;
-    text-align: center;
-    margin-top: 5px; /* Add some spacing between the bar and label */
-  }
-  
-  .legend {
-    display: flex;
-    justify-content: flex-end;
-    margin-top: 20px; /* Increase the top margin */
-  }
-  
-  .legend-item {
-    display: flex;
-    align-items: center;
-    margin-left: 20px;
-  }
-  
-  .legend-color {
-    width: 10px;
-    height: 10px;
-    margin-right: 5px;
-    border-radius: 50%; /* Make the legend colors circular */
-  }
-  
-  .legend-color.in {
-    background-color: #2196f3;
-  }
-  
-  .legend-color.out {
-    background-color: #ff9800;
-  }
+.sort-traffic button {
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  font-weight: 700;
+  background-color: #fff;
+  color: Black;
+  border: 2px solid black;
+  border-radius: 20px;
+  cursor: pointer;
+  margin: 0 2rem 1rem 0;
+
+}
+
+.sort-traffic button:hover {
+  color: black;
+  background-color: #31F78C;
+}
+.sort-traffic button.active1  {
+  color: #31F78C;
+  background-color: Black;
+}
+
+
+.chart-container {
+  display: flex;
+  align-items: flex-end;
+}
+
+.y-axis {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 200px;
+  margin-right: 20px; /* Increase the right margin */
+}
+
+.y-axis-label {
+  color: #888;
+  font-size: 12px;
+  text-align: right;
+  width: 40px; /* Increase the width */
+}
+
+.bars {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  height: 200px;
+  align-items: flex-end;
+}
+
+.bar-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 40px;
+  margin: 0 5px; /* Add some spacing between bar groups */
+}
+
+/* .bar {
+  width: 20px;
+  margin-bottom: 5px;
+  border-radius: 2px; 
+  transition: all 0.3s ease;
+} */
+
+/* .bar.in {
+  background-color: #2196f3;
+}
+
+.bar.out {
+  background-color: #ff9800;
+} */
+
+.bar-label {
+  font-size: 12px;
+  color: #888;
+  text-align: center;
+  margin-top: 5px; /* Add some spacing between the bar and label */
+}
+
+.legend {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 20px; /* Increase the top margin */
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  margin-left: 20px;
+}
+
+.legend-color {
+  width: 10px;
+  height: 10px;
+  margin-right: 5px;
+  border-radius: 50%; /* Make the legend colors circular */
+}
+
+.legend-color.in {
+  background-color: #2196f3;
+}
+
+.legend-color.out {
+  background-color: #ff9800;
+}
