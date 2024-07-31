@@ -6,15 +6,17 @@ from flask_cors import CORS
 from datetime import datetime
 from sqlalchemy import and_, or_,func
 
-from API.Utilities.parsedDateAndTime import parseDateTime
-from Utilities import parsedDateAndTime
+from .Utilities.parsedDateAndTime import parseDateTime
+
+# from API.Utilities.parsedDateAndTime import parseDateTime
+# from Utilities import parsedDateAndTime
 
 
 app = Flask(__name__)
 api = Api(app)
 CORS(app)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = "mysql://root@localhost/vehicals?charset=utf8mb4"
+app.config['SQLALCHEMY_DATABASE_URI'] = "mysql://root@localhost/vehicals"
 db = SQLAlchemy(app)
 
 
