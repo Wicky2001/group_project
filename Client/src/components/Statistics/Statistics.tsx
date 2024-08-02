@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import NavBar from "../NavBar";
 import StatStyle from "./Statistics.module.css";
 import SearchBar1 from "./SearchBar1";
 import Summery from "./Summery";
 import Graph1 from "./Graph1";
-import Graph2 from "./Graph2";
+// import Graph2 from "./Graph2";
 import axios from "axios";
 
 // Statistics component
