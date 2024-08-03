@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import NavBar from "../NavBar";
 import StatStyle from "./Statistics.module.css";
 import SearchBar1 from "./SearchBar1";
 import Summery from "./Summery";
 import Graph1 from "./Graph1";
 import axios from "axios";
+import Graph2 from "./Graph2";
 
 const Statistics: React.FC = () => {
   const [summaryData, setSummaryData] = useState<any>({
@@ -59,9 +60,9 @@ const Statistics: React.FC = () => {
         <div className={StatStyle.chart2}>
           <Graph1 responseData={graph1Data} />
         </div>
-        {/* <div className={StatStyle.chart3}>
+        <div className={StatStyle.chart3}>
           <Graph2 />
-        </div> */}
+        </div>
       </div>
     </>
   );
