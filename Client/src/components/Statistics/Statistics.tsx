@@ -7,14 +7,17 @@ import Graph1 from "./Graph1";
 import axios from "axios";
 import Graph2 from "./Graph2";
 
-// Statistics component
 const Statistics: React.FC = () => {
   const [summaryData, setSummaryData] = useState<any>({
     totalIn: 0,
     totalOut: 0,
-  }); // State to store summary data
+  });
+  const [graph1Data, setGraph1Data] = useState<any[]>([]);
 
-  const [graph1Data, setGraph1Data] = useState<any[]>([]); // State to store graph1 data
+  useEffect(() => {
+    // Initial search to load data on component mount
+    handleSearch(getCurrentDate(), getCurrentDate(), "00:00:00", "23:59:00");
+  }, []);
 
   const handleSearch = async (
     startDate: string,
@@ -24,25 +27,23 @@ const Statistics: React.FC = () => {
   ) => {
     console.log("Search:", startDate, endDate, startTime, endTime);
     try {
-      // Make the API request using Axios or any other HTTP client library
       const response = await axios.get(`http://localhost:5002/searchByDate`, {
-        params: {
-          startDate,
-          endDate,
-          startTime,
-          endTime,
-          statics: true,
-        },
+        params: { startDate, endDate, startTime, endTime, statics: true },
       });
-
-      // Handle the API response
-      //console.log(response.data);
-      setSummaryData(response.data.summary); // Store summary data in state
-      setGraph1Data(response.data.result); // Store graph1 data in state
+      setSummaryData(response.data.summary);
+      setGraph1Data(response.data.result);
     } catch (error) {
       console.error("Error:", error);
     }
   };
+
+  function getCurrentDate(): string {
+    const currentDate = new Date();
+    const year = currentDate.getFullYear();
+    const month = String(currentDate.getMonth() + 1).padStart(2, "0");
+    const day = String(currentDate.getDate()).padStart(2, "0");
+    return `${year}-${month}-${day}`;
+  }
 
   return (
     <>

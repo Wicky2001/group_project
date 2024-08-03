@@ -5,10 +5,11 @@
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     border-radius: 20px;
     margin: 0px 10px 0 10px;
+    max-width: 100px;
   }
-  .navbar {
-    grid-column: 1 / 2;
-    grid-row: 1 / -1;
+  .navbar-nav{
+    align-items: center;
+    padding: 5px;
   }
   .font{
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -44,9 +45,9 @@
 }
 
 .font .nav-link {
-  border-radius: 999px !important;
+  border-radius: 10px !important;
   margin:5px 2px;
-  padding: 2px  !important;
+  padding: 5px  !important;
 }
 
 .font .nav-link:hover {

@@ -17,6 +17,8 @@ api = Api(app)
 CORS(app)
 
 app.config['SQLALCHEMY_DATABASE_URI'] = "mysql://root@localhost/vehicals"
+#app.config['SQLALCHEMY_DATABASE_URI'] = "mysql://root:Mysql%40123@localhost/detections?charset=utf8mb4"
+
 db = SQLAlchemy(app)
 
 
