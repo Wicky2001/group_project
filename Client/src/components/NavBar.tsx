@@ -14,44 +14,44 @@ function NavBar() {
     <Navbar
       bg="light"
       expand="lg"
-      className="flex-column flex-shrink-0 h-100 navbar shadow-sm mb-4"
+      className="flex-column flex-shrink-0 navbar shadow-sm mb-4"
     >
       <Container fluid>
-        <Navbar.Toggle aria-controls="basic-navbar-nav" />
-        <Navbar.Collapse id="basic-navbar-nav">
-          <Nav className="me-auto flex-column font text-dark">
-            <Nav.Link
-              href="/"
-              className={location.pathname === "/" ? "active" : ""}
-            >
-              <img
-                src={dsh}
-                alt="Dashboard"
-                className="holder py-3 px-4 text-dark fw-bold"
-              />
-            </Nav.Link>
-            <Nav.Link
-              href="/statistics"
-              className={location.pathname === "/statistics" ? "active" : ""}
-            >
-              <img
-                src={stat}
-                alt="Statistics"
-                className="holder py-3 px-4 text-dark fw-bold"
-              />
-            </Nav.Link>
-            <Nav.Link
-              href="/logs"
-              className={location.pathname === "/logs" ? "active" : ""}
-            >
-              <img
-                src={log}
-                alt="Logs"
-                className="holder py-3 px-4 text-dark fw-bold"
-              />
-            </Nav.Link>
-          </Nav>
-        </Navbar.Collapse>
+        {/* <Navbar.Toggle aria-controls="basic-navbar-nav" /> */}
+        {/* <Navbar.Collapse id="basic-navbar-nav"> */}
+        <Nav className="me-auto flex-column font text-dark">
+          <Nav.Link
+            href="/"
+            className={location.pathname === "/" ? "active" : ""}
+          >
+            <img
+              src={dsh}
+              alt="Dashboard"
+              className="holder nav-link text-dark fw-bold"
+            />
+          </Nav.Link>
+          <Nav.Link
+            href="/statistics"
+            className={location.pathname === "/statistics" ? "active" : ""}
+          >
+            <img
+              src={stat}
+              alt="Statistics"
+              className="holder nav-link text-dark fw-bold"
+            />
+          </Nav.Link>
+          <Nav.Link
+            href="/logs"
+            className={location.pathname === "/logs" ? "active" : ""}
+          >
+            <img
+              src={log}
+              alt="Logs"
+              className="holder nav-link text-dark fw-bold"
+            />
+          </Nav.Link>
+        </Nav>
+        {/* </Navbar.Collapse> */}
       </Container>
     </Navbar>
   );

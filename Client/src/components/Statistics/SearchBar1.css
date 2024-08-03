@@ -11,6 +11,7 @@
     justify-content: center;
     padding: 1rem;
     margin-right: 10px;
+    gap:5px;
   }
   
   .search-bar input {
@@ -39,5 +40,4 @@
   }
   .search-bar button:active {
     font-weight: bold;
-
   }
