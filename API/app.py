@@ -1,11 +1,11 @@
-from flask import Flask, request,jsonify
+from flask import Flask, request,jsonify, Response
 from flask_restful import Resource, Api, abort
 from flask_sqlalchemy import SQLAlchemy
 from marshmallow import Schema, fields, ValidationError, validates_schema
 from flask_cors import CORS
 from datetime import datetime
 from sqlalchemy import and_, or_,func
-
+import cv2
 from .Utilities.parsedDateAndTime import parseDateTime
 
 # from API.Utilities.parsedDateAndTime import parseDateTime
@@ -541,9 +541,26 @@ api.add_resource(searchByDate, "/searchByDate")
 api.add_resource(addEntry,"/addEntry")
 api.add_resource(sortTraffic,"/sortTraffic")
 
+# Video streaming endpoint
+camera = cv2.VideoCapture(0)
+
+def generate_frames():
+    while True:
+        success, frame = camera.read()
+        if not success:
+            break
+        else:
+            ret, buffer = cv2.imencode('.jpg', frame)
+            frame = buffer.tobytes()
+            yield (b'--frame\r\n'
+                   b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
+
+@app.route('/video_feed')
+def video_feed():
+    return Response(generate_frames(), mimetype='multipart/x-mixed-replace; boundary=frame')
+
 
 if __name__ == "__main__":
-    #changed
     app.run(debug=True, port=5002)
     print("Server is running...")
 

@@ -26,12 +26,13 @@
   .search-bar button {
     padding: 0.5rem 1rem;
     font-size: 1rem;
-    background-color: #31F78C;
-    color: Black;
+    background-color: Black;
+    color: white;
     border-radius: 20px;
     border: 2px solid black;
     cursor: pointer;
     margin: 0 0.5rem 0 0.5rem;
+    font-weight: 600;
 
   }
   
@@ -40,6 +41,6 @@
     background-color: Black;
   }
   .search-bar button:active {
-    font-weight: bold;
+    box-shadow: #54ee9c 0px 0px 20px !important;
 
   }

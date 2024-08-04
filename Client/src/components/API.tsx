@@ -6,6 +6,7 @@ const API_CONFIG = {
   TodaySummary: `${API_BASE_URL}/TodaySummary`,
   sortTraffic: `${API_BASE_URL}/sortTraffic?`,
   searchByDate: `${API_BASE_URL}/searchByDate`,
+  videoFeed: `${API_BASE_URL}/video_feed`,
 };
 
 export default API_CONFIG;

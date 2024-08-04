@@ -14,8 +14,7 @@ const TodaysSummery: React.FC = () => {
     return <div>No Data to Fetch.</div>;
   }
 
-  const { total_entered, total_left, still_in_premise, anomalies } =
-    daySummary || {};
+  const { total_entered, total_left, still_in_premise } = daySummary || {};
 
   return (
     <div className="today-summery">

@@ -11,7 +11,7 @@ interface TrafficData {
 
 const Graph2: React.FC = () => {
   const [timePeriod, setTimePeriod] = useState<"hour" | "month" | "year">(
-    "hour"
+    "month"
   );
   const [data, setData] = useState<TrafficData[]>([]);
 
@@ -46,27 +46,30 @@ const Graph2: React.FC = () => {
 
   return (
     <div className="traffic-chart">
-      <div className="sort-traffic">
-        <button
-          onClick={() => setTimePeriod("hour")}
-          className={timePeriod === "hour" ? "active1" : ""}
-        >
-          Hours
-        </button>
-        <button
-          onClick={() => setTimePeriod("month")}
-          className={timePeriod === "month" ? "active1" : ""}
-        >
-          Months
-        </button>
-        <button
-          onClick={() => setTimePeriod("year")}
-          className={timePeriod === "year" ? "active1" : ""}
-        >
-          Years
-        </button>
+      <div className="head">Complete Overview</div>
+      <div className="flexing">
+        <div className="sort-traffic">
+          <button
+            onClick={() => setTimePeriod("hour")}
+            className={timePeriod === "hour" ? "active1" : ""}
+          >
+            Hours
+          </button>
+          <button
+            onClick={() => setTimePeriod("month")}
+            className={timePeriod === "month" ? "active1" : ""}
+          >
+            Months
+          </button>
+          <button
+            onClick={() => setTimePeriod("year")}
+            className={timePeriod === "year" ? "active1" : ""}
+          >
+            Years
+          </button>
+        </div>
+        <BarGraph2 data={data} />
       </div>
-      <BarGraph2 data={data} />
     </div>
   );
 };

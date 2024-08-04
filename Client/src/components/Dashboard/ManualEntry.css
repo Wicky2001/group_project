@@ -8,6 +8,7 @@
   height: 95%;
   display: flex;
   align-items: flex-start;
+  align-content: flex-start;
   flex-wrap: wrap;
   }
   .manual-entry h2 {

@@ -1,6 +1,6 @@
 import React from "react";
 import styles from "./Newest.module.css";
-import img1 from "../../assets/r1.png";
+import img1 from "../../../public/detected_vehicles_images/AKL60362024-03-25_12-36-23.jpg";
 import { useEntries } from "./lastEntries";
 
 const Newest: React.FC = () => {

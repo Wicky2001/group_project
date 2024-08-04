@@ -8,7 +8,6 @@ interface SummeryProps {
 
 const Summery: React.FC<SummeryProps> = ({ summaryData }) => {
   const { totalIn, totalOut } = summaryData;
-  const stillInPremise = totalIn - totalOut;
 
   return (
     <div className="summery">
