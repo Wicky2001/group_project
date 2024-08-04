@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import NavBar from "../NavBar";
 import StatStyle from "./Statistics.module.css";
 import SearchBar1 from "./SearchBar1";
@@ -6,6 +6,7 @@ import Summery from "./Summery";
 import Graph1 from "./Graph1";
 import axios from "axios";
 import Graph2 from "./Graph2";
+import API_CONFIG from "../API";
 
 const Statistics: React.FC = () => {
   const [summaryData, setSummaryData] = useState<any>({
@@ -25,9 +26,8 @@ const Statistics: React.FC = () => {
     startTime: string,
     endTime: string
   ) => {
-    console.log("Search:", startDate, endDate, startTime, endTime);
     try {
-      const response = await axios.get(`http://localhost:5002/searchByDate`, {
+      const response = await axios.get(API_CONFIG.searchByDate, {
         params: { startDate, endDate, startTime, endTime, statics: true },
       });
       setSummaryData(response.data.summary);

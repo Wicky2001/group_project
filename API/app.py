@@ -16,8 +16,8 @@ app = Flask(__name__)
 api = Api(app)
 CORS(app)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = "mysql://root@localhost/vehicals"
-#app.config['SQLALCHEMY_DATABASE_URI'] = "mysql://root:Mysql%40123@localhost/detections?charset=utf8mb4"
+#app.config['SQLALCHEMY_DATABASE_URI'] = "mysql://root@localhost/vehicals"
+app.config['SQLALCHEMY_DATABASE_URI'] = "mysql://root:Mysql%40123@localhost/detections?charset=utf8mb4"
 
 db = SQLAlchemy(app)
 
@@ -224,7 +224,7 @@ class TodaySummary(Resource):
             "anomalies": 0 # Keep commented for future development
         }
 
-        return summary
+        return summary, 200
 
 
 class SearchSchema(Schema):
@@ -535,7 +535,7 @@ class sortTraffic(Resource):
         }, 200
 
 api.add_resource(lastEntries, "/lastEntries")
-api.add_resource(TodaySummary, "/daysummary")
+api.add_resource(TodaySummary, "/TodaySummary")
 api.add_resource(Search, "/Search")
 api.add_resource(searchByDate, "/searchByDate")
 api.add_resource(addEntry,"/addEntry")

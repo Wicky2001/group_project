@@ -32,10 +32,6 @@ const TodaysSummery: React.FC = () => {
         <span className="label">Still In Premise</span>
         <div className="value in-premise">{still_in_premise}</div>
       </div>
-      <div className="summery-item">
-        <span className="label">Anomalies</span>
-        <div className="value anomalies">{anomalies}</div>
-      </div>
     </div>
   );
 };

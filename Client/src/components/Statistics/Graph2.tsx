@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import BarGraph2 from "./BarGraph2"; // Updated component
 import "./Graph2.css";
+import API_CONFIG from "../API";
 
 interface TrafficData {
   hour: number;
@@ -17,7 +18,7 @@ const Graph2: React.FC = () => {
   // Fetch data from the backend based on the selected time period
   const fetchTrafficData = async () => {
     try {
-      let apiUrl = "http://localhost:5002/sortTraffic?";
+      let apiUrl = API_CONFIG.sortTraffic;
       if (timePeriod === "hour") {
         apiUrl += "hour=true";
       } else if (timePeriod === "month") {

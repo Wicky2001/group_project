@@ -4,6 +4,7 @@ import StatStyle from "./Statistics.module.css";
 import SearchBar2 from "./SearchBar2";
 import Container from "./Container";
 import axios from "axios";
+import API_CONFIG from "../API";
 
 const Logs: React.FC = () => {
   const [responseData, setResponseData] = useState<any[]>([]); // State to store response data
@@ -28,7 +29,7 @@ const Logs: React.FC = () => {
     );
     try {
       // Make the API request using Axios or any other HTTP client library
-      const response = await axios.get(`http://localhost:5002/searchByDate`, {
+      const response = await axios.get(API_CONFIG.searchByDate, {
         params: {
           startDate,
           endDate,

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "./ManualEntry.css";
+import API_CONFIG from "../API";
 
 interface FormData {
   numberPlate: string;
@@ -48,7 +49,7 @@ const ManualEntry: React.FC = () => {
     try {
       const entryDate = currentTime.toISOString().split("T")[0]; // YYYY-MM-DD
       const entryTime = currentTime.toLocaleTimeString([], { hour12: false }); // HH:MM:SS
-      const response = await axios.post("http://127.0.0.1:5002/addEntry", {
+      const response = await axios.post(API_CONFIG.addEntry, {
         entryDate,
         entryTime,
         ...formData,
