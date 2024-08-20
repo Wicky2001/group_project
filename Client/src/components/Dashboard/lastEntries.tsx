@@ -1,5 +1,6 @@
 import useSWR from "swr";
 import axios from "axios";
+import API_CONFIG from "../API";
 
 // Define the response structure
 interface ApiResponse {
@@ -38,27 +39,25 @@ const fetcher = async (url: string): Promise<ApiResponse> => {
 export const useEntries = () => {
   // Use SWR for data fetching
   const { data, error, isLoading } = useSWR<ApiResponse>(
-    "http://127.0.0.1:5002/lastEntry",
+    API_CONFIG.lastEntries,
     fetcher,
     {
-      refreshInterval: 1000, // Refresh every second
+      refreshInterval: 5000, // Refresh
     }
   );
 
-  // Handle errors
+  // Handle cases with error, loading, or no data
   if (error) {
-    console.error("Error fetching data:", error);
-    return { newest: null, previous: [], error: "Failed to load data" };
+    // console.error("Error fetching data:", error);
   }
 
-  // Handle loading state
-  if (isLoading) {
-    return { newest: null, previous: [], loading: true };
-  }
-
-  // Handle cases with no data
   if (!data || !data.result) {
-    return { newest: null, previous: [] };
+    return {
+      newest: null,
+      previous: [],
+      loading: isLoading,
+      error: error ? "Failed to load data" : null,
+    };
   }
 
   // Destructure result array
@@ -89,5 +88,10 @@ export const useEntries = () => {
   // Map the previous entries
   const previous: Entry[] = result.slice(0, 4).map(formatEntry);
 
-  return { newest, previous };
+  return {
+    newest,
+    previous,
+    loading: isLoading,
+    error: error ? "Failed to load data" : null,
+  };
 };

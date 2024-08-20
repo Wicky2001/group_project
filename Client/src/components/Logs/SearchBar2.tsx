@@ -57,6 +57,7 @@ const SearchBar2: React.FC<SearchBarProps> = ({ onSearch }) => {
     handleSetEndTime("23:59");
     setNumberPlate("");
     setVehicleType("All");
+    handleSearch();
   };
 
   return (
@@ -101,7 +102,7 @@ const SearchBar2: React.FC<SearchBarProps> = ({ onSearch }) => {
         {/* Add more options as needed */}
       </select>
       <button onClick={handleSearch}>Search</button>
-      <button onClick={handleClear}>Clear</button>
+      <button onClick={handleClear}> Clear</button>
     </div>
   );
 };

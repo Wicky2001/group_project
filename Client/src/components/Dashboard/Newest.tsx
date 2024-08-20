@@ -1,13 +1,20 @@
 import React from "react";
 import styles from "./Newest.module.css";
 import img1 from "../../assets/r1.png";
+//import img1 from "../../../public/detected_vehicles_images/CK191192024-03-24_16-23-36.jpg";
 import { useEntries } from "./lastEntries";
 
 const Newest: React.FC = () => {
   const { newest } = useEntries();
 
   if (!newest) {
-    return <div>No data available</div>;
+    return (
+      <div className={styles.container}>
+        <div className={styles.header}>
+          <div className={styles.newestEntry}>Newest Entry</div>
+        </div>
+      </div>
+    );
   }
 
   const { date, time, numberPlate, vehicleType, status } = newest;

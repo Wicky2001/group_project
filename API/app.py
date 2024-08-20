@@ -1,11 +1,11 @@
-from flask import Flask, request,jsonify
+from flask import Flask, request,jsonify, Response
 from flask_restful import Resource, Api, abort
 from flask_sqlalchemy import SQLAlchemy
 from marshmallow import Schema, fields, ValidationError, validates_schema
 from flask_cors import CORS
 from datetime import datetime
 from sqlalchemy import and_, or_,func
-
+import cv2
 from .Utilities.parsedDateAndTime import parseDateTime
 
 # from API.Utilities.parsedDateAndTime import parseDateTime
@@ -16,8 +16,8 @@ app = Flask(__name__)
 api = Api(app)
 CORS(app)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = "mysql://root@localhost/vehicals"
-#app.config['SQLALCHEMY_DATABASE_URI'] = "mysql://root:Mysql%40123@localhost/detections?charset=utf8mb4"
+#app.config['SQLALCHEMY_DATABASE_URI'] = "mysql://root@localhost/vehicals"
+app.config['SQLALCHEMY_DATABASE_URI'] = "mysql://root:Mysql%40123@localhost/detections?charset=utf8mb4"
 
 db = SQLAlchemy(app)
 
@@ -194,9 +194,6 @@ def filterDetections(dateTimeInfo):
         )
     )
 
-
-
-
 class TodaySummary(Resource):
     def get(self):
         today = datetime.now()
@@ -224,13 +221,11 @@ class TodaySummary(Resource):
             "anomalies": 0 # Keep commented for future development
         }
 
-        return summary
-
+        return summary, 200
 
 class SearchSchema(Schema):
     day = fields.Str(required=False, allow_none=True)
     number_plate = fields.Str(required=True)  # Match the field name in the schema
-
 
 class Search(Resource):
 
@@ -271,7 +266,6 @@ class Search(Resource):
         marshaledEntries.append({'length': len(marshaledEntries)})
         response=jsonify(marshaledEntries)
         return response
-
 
 class searchByDateSchema(Schema):
     startDate = fields.Date(required=True)
@@ -431,8 +425,6 @@ class searchByDate(Resource):
 
         return response
 
-
-
 class addEntrySchema(Schema):
     entryDate = fields.Date(required=True)
     entryTime = fields.Time(required=True)
@@ -535,15 +527,32 @@ class sortTraffic(Resource):
         }, 200
 
 api.add_resource(lastEntries, "/lastEntries")
-api.add_resource(TodaySummary, "/daysummary")
+api.add_resource(TodaySummary, "/TodaySummary")
 api.add_resource(Search, "/Search")
 api.add_resource(searchByDate, "/searchByDate")
 api.add_resource(addEntry,"/addEntry")
 api.add_resource(sortTraffic,"/sortTraffic")
 
+# Video streaming endpoint
+camera = cv2.VideoCapture(0)
+
+def generate_frames():
+    while True:
+        success, frame = camera.read()
+        if not success:
+            break
+        else:
+            ret, buffer = cv2.imencode('.jpg', frame)
+            frame = buffer.tobytes()
+            yield (b'--frame\r\n'
+                   b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
+
+@app.route('/video_feed')
+def video_feed():
+    return Response(generate_frames(), mimetype='multipart/x-mixed-replace; boundary=frame')
+
 
 if __name__ == "__main__":
-    #changed
     app.run(debug=True, port=5002)
     print("Server is running...")
 

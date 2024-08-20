@@ -11,11 +11,15 @@ const TodaysSummery: React.FC = () => {
   }
 
   if (isError) {
-    return <div>No Data to Fetch.</div>;
+    return (
+      <div className="today-summery">
+        <h2>Today's Summery</h2>
+        <div>No Data To Show.</div>
+      </div>
+    );
   }
 
-  const { total_entered, total_left, still_in_premise, anomalies } =
-    daySummary || {};
+  const { total_entered, total_left, still_in_premise } = daySummary || {};
 
   return (
     <div className="today-summery">
@@ -31,10 +35,6 @@ const TodaysSummery: React.FC = () => {
       <div className="summery-item">
         <span className="label">Still In Premise</span>
         <div className="value in-premise">{still_in_premise}</div>
-      </div>
-      <div className="summery-item">
-        <span className="label">Anomalies</span>
-        <div className="value anomalies">{anomalies}</div>
       </div>
     </div>
   );

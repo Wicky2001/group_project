@@ -8,7 +8,6 @@ interface SummeryProps {
 
 const Summery: React.FC<SummeryProps> = ({ summaryData }) => {
   const { totalIn, totalOut } = summaryData;
-  const stillInPremise = totalIn - totalOut;
 
   return (
     <div className="summery">
@@ -20,14 +19,6 @@ const Summery: React.FC<SummeryProps> = ({ summaryData }) => {
       <div className="summery-item">
         <span className="label">Total Left</span>
         <div className="value left">{totalOut}</div>
-      </div>
-      <div className="summery-item">
-        <span className="label">Still In Premise</span>
-        <div className="value in-premise">{stillInPremise}</div>
-      </div>
-      <div className="summery-item">
-        <span className="label">Anomalies</span>
-        <div className="value anomalies">N/A</div>
       </div>
     </div>
   );
