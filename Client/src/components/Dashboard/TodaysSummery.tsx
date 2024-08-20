@@ -11,7 +11,12 @@ const TodaysSummery: React.FC = () => {
   }
 
   if (isError) {
-    return <div>No Data to Fetch.</div>;
+    return (
+      <div className="today-summery">
+        <h2>Today's Summery</h2>
+        <div>No Data To Show.</div>
+      </div>
+    );
   }
 
   const { total_entered, total_left, still_in_premise } = daySummary || {};

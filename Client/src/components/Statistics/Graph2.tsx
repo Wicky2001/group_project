@@ -46,7 +46,7 @@ const Graph2: React.FC = () => {
 
   return (
     <div className="traffic-chart">
-      <div className="head">Complete Overview</div>
+      <div className="head">Complete Logs Overview</div>
       <div className="flexing">
         <div className="sort-traffic">
           <button

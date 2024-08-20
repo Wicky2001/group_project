@@ -194,9 +194,6 @@ def filterDetections(dateTimeInfo):
         )
     )
 
-
-
-
 class TodaySummary(Resource):
     def get(self):
         today = datetime.now()
@@ -226,11 +223,9 @@ class TodaySummary(Resource):
 
         return summary, 200
 
-
 class SearchSchema(Schema):
     day = fields.Str(required=False, allow_none=True)
     number_plate = fields.Str(required=True)  # Match the field name in the schema
-
 
 class Search(Resource):
 
@@ -271,7 +266,6 @@ class Search(Resource):
         marshaledEntries.append({'length': len(marshaledEntries)})
         response=jsonify(marshaledEntries)
         return response
-
 
 class searchByDateSchema(Schema):
     startDate = fields.Date(required=True)
@@ -430,8 +424,6 @@ class searchByDate(Resource):
             response = jsonify(responseData)
 
         return response
-
-
 
 class addEntrySchema(Schema):
     entryDate = fields.Date(required=True)
