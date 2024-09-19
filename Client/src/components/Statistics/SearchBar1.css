@@ -7,10 +7,12 @@
     border-radius: 20px;
     overflow: hidden;
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
     justify-content: center;
     padding: 1rem;
     margin-right: 10px;
+    gap:5px;
   }
   
   .search-bar input {
@@ -24,12 +26,13 @@
   .search-bar button {
     padding: 0.5rem 1rem;
     font-size: 1rem;
-    background-color: #31F78C;
-    color: Black;
+    background-color: Black;
+    color: white;
     border-radius: 20px;
     border: 10px solid black;
     cursor: pointer;
     margin: 0 0.5rem 0 0.5rem;
+    font-weight: 600;
 
   }
   
@@ -38,6 +41,5 @@
     background-color: rgb(52, 48, 48);
   }
   .search-bar button:active {
-    font-weight: bold;
-
+    box-shadow: #54ee9c 0px 0px 20px !important;
   }

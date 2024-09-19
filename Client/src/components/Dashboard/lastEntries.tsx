@@ -1,9 +1,11 @@
 import useSWR from "swr";
 import axios from "axios";
+import API_CONFIG from "../API";
 
+// Define the response structure
 interface ApiResponse {
   length: number;
-  result: {
+  result: Array<{
     day: {
       year: number;
       month: number;
@@ -15,9 +17,10 @@ interface ApiResponse {
     number_plate: string;
     vehicle_type: string;
     status: string;
-  }[];
+  }>;
 }
 
+// Define the entry structure
 interface Entry {
   date: string;
   time: string;
@@ -26,48 +29,69 @@ interface Entry {
   status: "in" | "out";
 }
 
-const fetcher = (url: string) => axios.get(url).then((res) => res.data);
+// Fetch data using axios
+const fetcher = async (url: string): Promise<ApiResponse> => {
+  const response = await axios.get<ApiResponse>(url);
+  return response.data;
+};
 
+// Hook to use entries
 export const useEntries = () => {
-  const { data, error } = useSWR<ApiResponse>(
-    "http://127.0.0.1:5002/lastEntries",
+  // Use SWR for data fetching
+  const { data, error, isLoading } = useSWR<ApiResponse>(
+    API_CONFIG.lastEntries,
     fetcher,
     {
-      refreshInterval: 1000, // Refresh every 5 seconds
+      refreshInterval: 5000, // Refresh
     }
   );
 
+  // Handle cases with error, loading, or no data
   if (error) {
-    console.error("Error fetching data:", error);
-    return { newest: null, previous: [] };
+    // console.error("Error fetching data:", error);
   }
 
   if (!data || !data.result) {
-    return { newest: null, previous: [] };
+    return {
+      newest: null,
+      previous: [],
+      loading: isLoading,
+      error: error ? "Failed to load data" : null,
+    };
   }
 
-  const result = data.result;
-  const newest = result[0]
-    ? {
-        date: `${result[0].day.year}/${result[0].day.month}/${result[0].day.date}`,
-        time: `${result[0].day.hour}:${result[0].day.minute}:${result[0].day.second}`,
-        numberPlate: result[0].number_plate,
-        vehicleType:
-          result[0].vehicle_type.toLowerCase() === ""
-            ? "Other"
-            : result[0].vehicle_type,
-        status: result[0].status.toLowerCase() === "in" ? "in" : "out",
-      }
-    : null;
+  // Destructure result array
+  const { result } = data;
 
-  const previous: Entry[] = result.slice(0, 4).map((item) => ({
-    date: `${item.day.year}/${item.day.month}/${item.day.date}`,
-    time: `${item.day.hour}:${item.day.minute}:${item.day.second}`,
-    numberPlate: item.number_plate,
-    vehicleType:
-      item.vehicle_type.toLowerCase() === "" ? "Other" : item.vehicle_type,
-    status: item.status.toLowerCase() === "in" ? "in" : "out",
-  }));
+  // Format and structure the newest entry
+  const formatEntry = (item: ApiResponse["result"][number]): Entry => {
+    const { year, month, date, hour, minute, second } = item.day;
+    return {
+      date: `${year}/${String(month).padStart(2, "0")}/${String(date).padStart(
+        2,
+        "0"
+      )}`,
+      time: `${String(hour).padStart(2, "0")}:${String(minute).padStart(
+        2,
+        "0"
+      )}:${String(second).padStart(2, "0")}`,
+      numberPlate: item.number_plate,
+      vehicleType:
+        item.vehicle_type.toLowerCase() === "" ? "Other" : item.vehicle_type,
+      status: item.status.toLowerCase() === "in" ? "in" : "out",
+    };
+  };
 
-  return { newest, previous };
+  // Find the newest entry
+  const newest: Entry | null = result[0] ? formatEntry(result[0]) : null;
+
+  // Map the previous entries
+  const previous: Entry[] = result.slice(0, 4).map(formatEntry);
+
+  return {
+    newest,
+    previous,
+    loading: isLoading,
+    error: error ? "Failed to load data" : null,
+  };
 };

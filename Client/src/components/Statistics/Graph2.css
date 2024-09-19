@@ -6,9 +6,11 @@
   overflow: hidden;
   padding: 20px;
   margin: 0 auto; /* Center the chart */
+}
+.flexing{
   display: flex;
   height: 100%;
-  align-items: center;
+  align-items: flex-start;
 }
 
 .sort-traffic {
@@ -33,8 +35,8 @@
 }
 
 .sort-traffic button:hover {
-  color: black;
-  background-color: #31F78C;
+  color: white;
+  background-color: Black;
 }
 .sort-traffic button.active1  {
   color: #31F78C;

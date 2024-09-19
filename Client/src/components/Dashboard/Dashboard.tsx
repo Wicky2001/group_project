@@ -26,14 +26,7 @@ function Dashboard() {
         <ManualEntry />
       </div>
       <div className={styles.todaysSummary}>
-        <div>
-          <TodaysSummery
-            // totalEntered={850}
-            // totalLeft={700}
-            // stillInPremise={150}
-            // anomalies={5}
-          />
-        </div>
+        <TodaysSummery />
       </div>
     </div>
   );
