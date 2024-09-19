@@ -30,7 +30,7 @@ const fetcher = (url: string) => axios.get(url).then((res) => res.data);
 
 export const useEntries = () => {
   const { data, error } = useSWR<ApiResponse>(
-    "http://127.0.0.1:5002/lastEntry",
+    "http://127.0.0.1:5002/lastEntries",
     fetcher,
     {
       refreshInterval: 1000, // Refresh every 5 seconds

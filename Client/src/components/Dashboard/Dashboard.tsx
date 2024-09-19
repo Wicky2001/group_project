@@ -28,10 +28,10 @@ function Dashboard() {
       <div className={styles.todaysSummary}>
         <div>
           <TodaysSummery
-            totalEntered={850}
-            totalLeft={700}
-            stillInPremise={150}
-            anomalies={5}
+            // totalEntered={850}
+            // totalLeft={700}
+            // stillInPremise={150}
+            // anomalies={5}
           />
         </div>
       </div>

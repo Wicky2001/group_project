@@ -6,7 +6,7 @@ from flask_cors import CORS
 from datetime import datetime
 from sqlalchemy import and_, or_,func
 
-from .Utilities.parsedDateAndTime import parseDateTime
+from Utilities.parsedDateAndTime import parseDateTime
 
 # from API.Utilities.parsedDateAndTime import parseDateTime
 # from Utilities import parsedDateAndTime
@@ -542,6 +542,6 @@ api.add_resource(sortTraffic,"/sortTraffic")
 
 if __name__ == "__main__":
     #changed
-    app.run(debug=True, port=5002)
+    app.run(debug=True, port=5000)
     print("Server is running...")
 
