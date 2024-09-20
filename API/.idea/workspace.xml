@@ -5,13 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ce59ba68-dfaa-40c0-a2c4-62f64158617f" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/app.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Client/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/../Client/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Client/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/../Client/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Client/src/components/Dashboard/Newest.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../Client/src/components/Dashboard/Newest.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Client/src/components/Dashboard/TodaysSummery.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../Client/src/components/Dashboard/TodaysSummery.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Client/src/components/Logs/SearchBar2.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../Client/src/components/Logs/SearchBar2.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -40,26 +36,26 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Flask server.Flask (app.py).executor&quot;: &quot;Run&quot;,
-    &quot;Python.API.executor&quot;: &quot;Run&quot;,
-    &quot;Python.Task 1.executor&quot;: &quot;Run&quot;,
-    &quot;Python.__init__.executor&quot;: &quot;Run&quot;,
-    &quot;Python.app.executor&quot;: &quot;Run&quot;,
-    &quot;Python.parsedDateAndTime.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;sh&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/sahan/Documents/GitHub/group_project/API&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Flask server.Flask (app.py).executor": "Run",
+    "Python.API.executor": "Run",
+    "Python.Task 1.executor": "Run",
+    "Python.__init__.executor": "Run",
+    "Python.app.executor": "Run",
+    "Python.parsedDateAndTime.executor": "Run",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "main",
+    "last_opened_file_path": "D:/Group project  wicky/group project code/API",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RunManager">
     <configuration name="API" type="PythonConfigurationType" factoryName="Python">
       <module name="API" />
@@ -88,7 +84,7 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-python-sdk-d68999036c7f-b11f5e8da5ad-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-233.14475.56" />
+        <option value="bundled-python-sdk-d68999036c7f-d3b881c8e49f-com.jetbrains.pycharm.community.sharedIndexes.bundled-PC-233.14475.56" />
       </set>
     </attachedChunks>
   </component>

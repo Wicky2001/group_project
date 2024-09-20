@@ -1,3 +1,5 @@
+import threading
+
 from flask import Flask, request,jsonify, Response
 from flask_restful import Resource, Api, abort
 from flask_sqlalchemy import SQLAlchemy
@@ -6,18 +8,19 @@ from flask_cors import CORS
 from datetime import datetime
 from sqlalchemy import and_, or_,func
 import cv2
-from .Utilities.parsedDateAndTime import parseDateTime
+from ultralytics import YOLO
 
-# from API.Utilities.parsedDateAndTime import parseDateTime
-# from Utilities import parsedDateAndTime
+# from .Utilities.parsedDateAndTime import parseDateTime
 
+from Utilities.parsedDateAndTime import parseDateTime
+from models.in_gate_model.pipeline import  generate_frames, vehicle_detection_process
 
 app = Flask(__name__)
 api = Api(app)
 CORS(app)
 
-#app.config['SQLALCHEMY_DATABASE_URI'] = "mysql://root@localhost/vehicals"
-app.config['SQLALCHEMY_DATABASE_URI'] = "mysql://root:Mysql%40123@localhost/detections?charset=utf8mb4"
+app.config['SQLALCHEMY_DATABASE_URI'] = "mysql://root@localhost/vehicals"
+# app.config['SQLALCHEMY_DATABASE_URI'] = "mysql://root:Mysql%40123@localhost/detections?charset=utf8mb4"
 
 db = SQLAlchemy(app)
 
@@ -534,25 +537,44 @@ api.add_resource(addEntry,"/addEntry")
 api.add_resource(sortTraffic,"/sortTraffic")
 
 # Video streaming endpoint
-camera = cv2.VideoCapture(0)
+# camera = cv2.VideoCapture(0)
+#
+# def generate_frames():
+#     while True:
+#         success, frame = camera.read()
+#         if not success:
+#             break
+#         else:
+#             ret, buffer = cv2.imencode('.jpg', frame)
+#             frame = buffer.tobytes()
+#             yield (b'--frame\r\n'
+#                    b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
 
-def generate_frames():
-    while True:
-        success, frame = camera.read()
-        if not success:
-            break
-        else:
-            ret, buffer = cv2.imencode('.jpg', frame)
-            frame = buffer.tobytes()
-            yield (b'--frame\r\n'
-                   b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
+
 
 @app.route('/video_feed')
 def video_feed():
+    # Start streaming the video feed when a request is made
     return Response(generate_frames(), mimetype='multipart/x-mixed-replace; boundary=frame')
 
-
 if __name__ == "__main__":
-    app.run(debug=True, port=5002)
-    print("Server is running...")
+    # Load models
+    coco_model = YOLO(r"D:\Group project wicky\group project code\models\utils\yolov8n.pt")
+    license_plate_detector = YOLO(r'D:\Group project  wicky\group project code\models\utils\license_plate_detector.pt')
 
+    # Start the vehicle detection thread
+    detection_thread = threading.Thread(target=vehicle_detection_process, args=(coco_model, license_plate_detector))
+    detection_thread.start()
+
+    # Start the Flask app in a separate thread for streaming
+    stream_thread = threading.Thread(target=lambda: app.run(debug=True, port=5002, use_reloader=False))
+    stream_thread.start()
+
+    try:
+        detection_thread.join()
+    except KeyboardInterrupt:
+        # When the server is shutting down, stop both threads
+        stop_detection_thread = True
+        stop_stream_thread = True
+        detection_thread.join()
+        stream_thread.join()
