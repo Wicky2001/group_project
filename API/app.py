@@ -1,6 +1,6 @@
 import threading
 
-from flask import Flask, request,jsonify, Response
+from flask import Flask, request,jsonify, Response,send_from_directory
 from flask_restful import Resource, Api, abort
 from flask_sqlalchemy import SQLAlchemy
 from marshmallow import Schema, fields, ValidationError, validates_schema
@@ -10,10 +10,16 @@ from sqlalchemy import and_, or_,func
 import cv2
 from ultralytics import YOLO
 
+stop_detection_thread = False
+stop_stream_thread = False
+latest_frame = [None]  # Use a list to allow modifications within threads
+lock = threading.Lock()
+
+
 # from .Utilities.parsedDateAndTime import parseDateTime
 
 from Utilities.parsedDateAndTime import parseDateTime
-from models.in_gate_model.pipeline import  generate_frames, vehicle_detection_process
+from models.in_gate_model.pipeline import  vehicle_detection_process
 
 app = Flask(__name__)
 api = Api(app)
@@ -34,6 +40,7 @@ class detections(db.Model):
     minute = db.Column(db.Integer, nullable=False)
     second = db.Column(db.Integer, nullable=False)
     number_plate = db.Column(db.String, nullable=True)
+    image_url=db.Column(db.String, nullable=True)
     in_or_out = db.Column(db.String, nullable=False)
     vehicle_type = db.Column(db.String,nullable=False)
 
@@ -58,6 +65,7 @@ class lastEntries(Resource):
                     'second': entry.second,
                 },
                 'number_plate': entry.number_plate,
+                'image_url':entry.image_url,
                 'vehicle_type':entry.vehicle_type,
                 'status': entry.in_or_out
             }
@@ -550,31 +558,38 @@ api.add_resource(sortTraffic,"/sortTraffic")
 #             yield (b'--frame\r\n'
 #                    b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
 
+@app.route('/images/<path:filename>')
+def serve_image(filename):
+    print(f"Requested filename: {filename}")  # Debug output
+    return send_from_directory(r'C:\Users\Wicky\Documents\GitHub\group_project_code\API\storage\detected_vehicles_images', filename)
 
+
+def generate_frames():
+    global stop_stream_thread
+
+    while not stop_stream_thread:
+        with lock:
+            if latest_frame[0] is not None:
+                frame = latest_frame[0].copy()
+                ret, buffer = cv2.imencode('.jpg', frame)
+                if ret:
+                    frame = buffer.tobytes()
+                    yield (b'--frame\r\n'
+                           b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
 
 @app.route('/video_feed')
 def video_feed():
-    # Start streaming the video feed when a request is made
+    global stop_detection_thread
+
+    if not stop_detection_thread:  # Start detection thread if not already running
+        coco_model = YOLO(r"C:\Users\Wicky\Documents\GitHub\group_project_code\models\utils\yolov8n.pt")
+        license_plate_detector = YOLO(r'C:\Users\Wicky\Documents\GitHub\group_project_code\models\utils\license_plate_detector.pt')
+
+        detection_thread = threading.Thread(target=vehicle_detection_process, args=(coco_model, license_plate_detector, latest_frame, lock, lambda: stop_detection_thread))
+        detection_thread.start()
+
     return Response(generate_frames(), mimetype='multipart/x-mixed-replace; boundary=frame')
 
 if __name__ == "__main__":
-    # Load models
-    coco_model = YOLO(r"D:\Group project wicky\group project code\models\utils\yolov8n.pt")
-    license_plate_detector = YOLO(r'D:\Group project  wicky\group project code\models\utils\license_plate_detector.pt')
-
-    # Start the vehicle detection thread
-    detection_thread = threading.Thread(target=vehicle_detection_process, args=(coco_model, license_plate_detector))
-    detection_thread.start()
-
-    # Start the Flask app in a separate thread for streaming
-    stream_thread = threading.Thread(target=lambda: app.run(debug=True, port=5002, use_reloader=False))
-    stream_thread.start()
-
-    try:
-        detection_thread.join()
-    except KeyboardInterrupt:
-        # When the server is shutting down, stop both threads
-        stop_detection_thread = True
-        stop_stream_thread = True
-        detection_thread.join()
-        stream_thread.join()
+    stop_stream_thread = False
+    app.run(debug=True, port=5002, use_reloader=False)

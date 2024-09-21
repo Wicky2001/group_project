@@ -1,6 +1,6 @@
 import React from "react";
 import styles from "./Newest.module.css";
-import img1 from "../../assets/r1.png";
+
 //import img1 from "../../../public/detected_vehicles_images/CK191192024-03-24_16-23-36.jpg";
 import { useEntries } from "./lastEntries";
 
@@ -17,7 +17,9 @@ const Newest: React.FC = () => {
     );
   }
 
-  const { date, time, numberPlate, vehicleType, status } = newest;
+  const { date, time, numberPlate, image_url, vehicleType, status } = newest;
+  // const image = process.env.PUBLIC_URL + image_url;
+  console.log(image_url);
   return (
     <div className={styles.container}>
       <div className={styles.header}>
@@ -56,7 +58,7 @@ const Newest: React.FC = () => {
         </div>
         <div className={styles.img}>
           <div className={styles.vehicleImageContainer}>
-            <img src={img1} alt="Vehicle" className={styles.vehicleImage} />
+            <img src={image_url} alt="Vehic" className={styles.vehicleImage} />
           </div>
         </div>
       </div>

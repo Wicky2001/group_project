@@ -15,6 +15,7 @@ interface ApiResponse {
       second: number;
     };
     number_plate: string;
+    image_url: string;
     vehicle_type: string;
     status: string;
   }>;
@@ -25,6 +26,7 @@ interface Entry {
   date: string;
   time: string;
   numberPlate: string;
+  image_url: string;
   vehicleType: string;
   status: "in" | "out";
 }
@@ -79,6 +81,7 @@ export const useEntries = () => {
       vehicleType:
         item.vehicle_type.toLowerCase() === "" ? "Other" : item.vehicle_type,
       status: item.status.toLowerCase() === "in" ? "in" : "out",
+      image_url: item.image_url,
     };
   };
 

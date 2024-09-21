@@ -161,7 +161,7 @@ def read_license_plate(license_plate_crop):
         bbox, text, score = detection
         filtered_text = ''.join(char for char in text if char.isalnum())
         #debug code
-        with open(r"D:\testig\Client\public\raw_number_plate", "a") as file_object:
+        with open(r"C:\Users\Wicky\Documents\GitHub\group_project_code\Client\public\raw_number_plate", "a") as file_object:
             text_to_append = f"{filtered_text}\n"
             file_object.write(text_to_append)
 
@@ -178,16 +178,16 @@ def read_license_plate(license_plate_crop):
             current_datetime_str = current_datetime.strftime("%Y-%m-%d_%H-%M-%S")
             changes = "add adaptive thresh block size:21 c:30"
 
-            with open(r"D:\testig\Client\public\final_number_plates", "a") as file_object:
+
+            with open(r"C:\Users\Wicky\Documents\GitHub\group_project_code\Client\public\final_number_plates", "a") as file_object:
                 text_to_append = f"number_plate = {filtered_text} confidence_score = {score} changes = {changes} date&time = {current_datetime_str}\n"
                 file_object.write(text_to_append)
-
             return finalize_number_plate
 
     return None, None
 
 
-def insert_data_to_data_base(database, table_name,number_plate_text,in_or_out):
+def insert_data_to_data_base(database, table_name,number_plate_text,in_or_out,image_url):
 
 
 
@@ -200,7 +200,7 @@ def insert_data_to_data_base(database, table_name,number_plate_text,in_or_out):
     current_minute = current_datetime.minute
     current_second = current_datetime.second
 
-    image_url = f"detected_vehicles_images/{number_plate_text + current_datetime_str}.jpg"
+
 
 
     host = "localhost"
