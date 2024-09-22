@@ -1,5 +1,6 @@
 import threading
-
+from flask_socketio import SocketIO, emit
+import time
 from flask import Flask, request,jsonify, Response,send_from_directory
 from flask_restful import Resource, Api, abort
 from flask_sqlalchemy import SQLAlchemy
@@ -10,10 +11,6 @@ from sqlalchemy import and_, or_,func
 import cv2
 from ultralytics import YOLO
 
-stop_detection_thread = False
-stop_stream_thread = False
-latest_frame = [None]  # Use a list to allow modifications within threads
-lock = threading.Lock()
 
 
 # from .Utilities.parsedDateAndTime import parseDateTime
@@ -23,7 +20,9 @@ from models.in_gate_model.pipeline import  vehicle_detection_process
 
 app = Flask(__name__)
 api = Api(app)
+socketio = SocketIO(app, cors_allowed_origins="*")
 CORS(app)
+
 
 app.config['SQLALCHEMY_DATABASE_URI'] = "mysql://root@localhost/vehicals"
 # app.config['SQLALCHEMY_DATABASE_URI'] = "mysql://root:Mysql%40123@localhost/detections?charset=utf8mb4"
@@ -563,19 +562,25 @@ def serve_image(filename):
     print(f"Requested filename: {filename}")  # Debug output
     return send_from_directory(r'C:\Users\Wicky\Documents\GitHub\group_project_code\API\storage\detected_vehicles_images', filename)
 
+stop_detection_thread = False
+latest_frame = [None]  # Use a shared memory for the frame
+lock = threading.Lock()
 
+# Reduce the resolution of the frame for faster processing
+FRAME_WIDTH = 640
+FRAME_HEIGHT = 480
+FPS = 10  # Adjust frame rate
 def generate_frames():
-    global stop_stream_thread
-
-    while not stop_stream_thread:
+    while True:
         with lock:
             if latest_frame[0] is not None:
-                frame = latest_frame[0].copy()
-                ret, buffer = cv2.imencode('.jpg', frame)
-                if ret:
-                    frame = buffer.tobytes()
-                    yield (b'--frame\r\n'
-                           b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
+                ret, buffer = cv2.imencode('.jpg', latest_frame[0], [cv2.IMWRITE_JPEG_QUALITY, 80])  # Compress the image
+                frame = buffer.tobytes()
+                yield (b'--frame\r\n'
+                       b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
+
+        time.sleep(1 / FPS)  # Control the frame rate
+
 
 @app.route('/video_feed')
 def video_feed():
@@ -585,11 +590,22 @@ def video_feed():
         coco_model = YOLO(r"C:\Users\Wicky\Documents\GitHub\group_project_code\models\utils\yolov8n.pt")
         license_plate_detector = YOLO(r'C:\Users\Wicky\Documents\GitHub\group_project_code\models\utils\license_plate_detector.pt')
 
-        detection_thread = threading.Thread(target=vehicle_detection_process, args=(coco_model, license_plate_detector, latest_frame, lock, lambda: stop_detection_thread))
+        detection_thread = threading.Thread(target=vehicle_detection_process, args=(coco_model, license_plate_detector, latest_frame, lock, lambda: stop_detection_thread,socketio))
         detection_thread.start()
 
     return Response(generate_frames(), mimetype='multipart/x-mixed-replace; boundary=frame')
 
+
+@socketio.on('connect')
+def handle_connect():
+    print('Client connected')
+    emit('message', {'data': 'Connected to the server!'})  # Optional: Send message to client on connect
+
+# Handle client disconnect event
+@socketio.on('disconnect')
+def handle_disconnect():
+    print('Client disconnected')
+
 if __name__ == "__main__":
     stop_stream_thread = False
-    app.run(debug=True, port=5002, use_reloader=False)
+    socketio.run(app, debug=True, port=5002, use_reloader=False,allow_unsafe_werkzeug=True)

@@ -6,7 +6,7 @@ from models.utils.util import read_license_plate, insert_data_to_data_base
 
 
 # Function for vehicle detection
-def vehicle_detection_process(coco_model, license_plate_detector, latest_frame, lock, stop_detection_thread):
+def vehicle_detection_process(coco_model, license_plate_detector, latest_frame, lock, stop_detection_thread,socketio):
     vehicles = [2, 3, 5, 7]  # Vehicle class IDs
     cap = cv2.VideoCapture(0)
     if not cap.isOpened():
@@ -82,20 +82,21 @@ def vehicle_detection_process(coco_model, license_plate_detector, latest_frame, 
                             # Generate the file name with the current date and time
                             current_datetime = datetime.now()
                             current_datetime_str = current_datetime.strftime("%Y-%m-%d_%H-%M-%S")
-                            file_name = f"http://127.0.0.1:5002/images/OO19822024-09-21_21-22-29.jpg/{license_plate_text + current_datetime_str}.jpg"
+                            file_name = f"{license_plate_text + current_datetime_str}.jpg"
+                            url_name = f"http://127.0.0.1:5002/images/{license_plate_text + current_datetime_str}.jpg"
 
                             # Full path for saving the image
                             image_save_location = os.path.join(save_dir, file_name)
 
                             # Save the image
-                            success = cv2.imwrite(image_save_location, frame)
+                            success = cv2.imwrite(image_save_location, license_plate_crop_thresh)
                             if success:
                                 print(f"Image saved successfully at: {image_save_location}")
                             else:
                                 print(f"Failed to save the image at: {image_save_location}")
 
                             # insert number plate to database
-                            insert_data_to_data_base("vehicals", "detections", license_plate_text, "IN",image_url=file_name)
+                            insert_data_to_data_base("vehicals", "detections", license_plate_text, "IN",image_url=url_name,socketio=socketio)
                             print("License Plate Text:", license_plate_text)
                             latest_frame[0] = frame.copy()
                             time.sleep(5)

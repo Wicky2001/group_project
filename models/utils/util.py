@@ -3,6 +3,7 @@ import easyocr
 import mysql.connector
 import datetime
 
+
 # Initialize the OCR reader
 reader = easyocr.Reader(['en'], gpu=True)
 
@@ -187,12 +188,8 @@ def read_license_plate(license_plate_crop):
     return None, None
 
 
-def insert_data_to_data_base(database, table_name,number_plate_text,in_or_out,image_url):
-
-
-
+def insert_data_to_data_base(database, table_name, number_plate_text, in_or_out, image_url,socketio):
     current_datetime = datetime.datetime.now()
-    current_datetime_str = current_datetime.strftime("%Y-%m-%d_%H-%M-%S")
     current_year = current_datetime.year
     current_month = current_datetime.month
     current_date = current_datetime.day
@@ -200,15 +197,11 @@ def insert_data_to_data_base(database, table_name,number_plate_text,in_or_out,im
     current_minute = current_datetime.minute
     current_second = current_datetime.second
 
-
-
-
     host = "localhost"
     user = "root"
     password = ""
     database = database
 
-    # Establish the connection
     connection = mysql.connector.connect(
         host=host,
         user=user,
@@ -217,21 +210,26 @@ def insert_data_to_data_base(database, table_name,number_plate_text,in_or_out,im
     )
 
     cursor = connection.cursor()
-    # Example INSERT query
-    # Assuming `detection` is the variable containing the detection data
-    sql = (f"INSERT INTO {table_name} (year, month, date, hour, minute, second, number_plate,image_url,in_or_out) "
-           f"VALUES (%s, %s, %s, %s,"
-           f"%s, %s, %s,%s,%s)")
+    sql = (f"INSERT INTO {table_name} (year, month, date, hour, minute, second, number_plate, image_url, in_or_out) "
+           f"VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)")
+    data = (current_year, current_month, current_date, current_hour, current_minute, current_second, number_plate_text,
+            image_url, in_or_out)
 
-    # Example data to insert
-    data = (current_year, current_month, current_date, current_hour, current_minute, current_second, number_plate_text,image_url,in_or_out)
-
-    # Execute the query
     cursor.execute(sql, data)
-
-    # Commit the transaction
     connection.commit()
 
-    # Close the cursor and connection
     cursor.close()
     connection.close()
+
+    # Emit the new entry to the frontend via WebSocket
+    new_entry = {
+        'date': f"{current_year}/{str(current_month).zfill(2)}/{str(current_date).zfill(2)}",
+        'time': f"{str(current_hour).zfill(2)}:{str(current_minute).zfill(2)}:{str(current_second).zfill(2)}",
+        'numberPlate': number_plate_text,
+        'vehicleType': 'other',  # Default to 'other' since we don't have this info
+        'status': in_or_out,
+        'image_url': image_url
+    }
+
+    # Emit the new data through socket to connected clients
+    socketio.emit('new_entry', new_entry)

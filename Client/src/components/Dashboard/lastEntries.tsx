@@ -42,10 +42,7 @@ export const useEntries = () => {
   // Use SWR for data fetching
   const { data, error, isLoading } = useSWR<ApiResponse>(
     API_CONFIG.lastEntries,
-    fetcher,
-    {
-      refreshInterval: 5000, // Refresh
-    }
+    fetcher
   );
 
   // Handle cases with error, loading, or no data
