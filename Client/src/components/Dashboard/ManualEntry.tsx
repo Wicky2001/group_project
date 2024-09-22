@@ -48,10 +48,12 @@ const ManualEntry: React.FC = () => {
 
     try {
       const entryDate = currentTime.toISOString().split("T")[0]; // YYYY-MM-DD
+      const image_url = "Manual entry"; // Static string for image_url
       const entryTime = currentTime.toLocaleTimeString([], { hour12: false }); // HH:MM:SS
       const response = await axios.post(API_CONFIG.addEntry, {
         entryDate,
         entryTime,
+        image_url, // Include the static string here
         ...formData,
       });
       console.log(response.data.message); // Log the response message
@@ -59,7 +61,7 @@ const ManualEntry: React.FC = () => {
       // Reset form fields
       setFormData({
         numberPlate: "",
-        vehicleType: "OTHER",
+        vehicleType: "Other",
         status: "IN",
       });
     } catch (error) {

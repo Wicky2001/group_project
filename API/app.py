@@ -39,7 +39,7 @@ class detections(db.Model):
     minute = db.Column(db.Integer, nullable=False)
     second = db.Column(db.Integer, nullable=False)
     number_plate = db.Column(db.String, nullable=True)
-    image_url=db.Column(db.String, nullable=True)
+    image_url=db.Column(db.String, nullable=False)
     in_or_out = db.Column(db.String, nullable=False)
     vehicle_type = db.Column(db.String,nullable=False)
 
@@ -441,6 +441,7 @@ class addEntrySchema(Schema):
     status = fields.String(required=True)
     numberPlate = fields.String(required=True)
     vehicleType = fields.String(required=True)
+    image_url = fields.String(required=True)
 
 class addEntry(Resource):
     def post(self):
@@ -481,7 +482,7 @@ class addEntry(Resource):
             entryMinute = parsedTime.minute
             entrySecond = parsedTime.second
 
-            entry = detections(year=entryYear,month=entryMonth,date=entryDay ,hour=entryHour,minute=entryMinute,second=entrySecond ,in_or_out=in_or_out,  number_plate =numberPlate, vehicle_type=vehicleType)
+            entry = detections(year=entryYear,month=entryMonth,date=entryDay ,hour=entryHour,minute=entryMinute,second=entrySecond ,in_or_out=in_or_out,  number_plate =numberPlate, vehicle_type=vehicleType,image_url="Manual Entry")
 
             db.session.add(entry)
             db.session.commit()
@@ -587,8 +588,8 @@ def video_feed():
     global stop_detection_thread
 
     if not stop_detection_thread:  # Start detection thread if not already running
-        coco_model = YOLO(r"C:\Users\Wicky\Documents\GitHub\group_project_code\models\utils\yolov8n.pt")
-        license_plate_detector = YOLO(r'C:\Users\Wicky\Documents\GitHub\group_project_code\models\utils\license_plate_detector.pt')
+        coco_model = YOLO(r"C:\Users\Wicky\Documents\GitHub\group_project_code\models\utils\yolov8n.pt", verbose=False)
+        license_plate_detector = YOLO(r'C:\Users\Wicky\Documents\GitHub\group_project_code\models\utils\license_plate_detector.pt',verbose=False)
 
         detection_thread = threading.Thread(target=vehicle_detection_process, args=(coco_model, license_plate_detector, latest_frame, lock, lambda: stop_detection_thread,socketio))
         detection_thread.start()

@@ -38,7 +38,7 @@ def vehicle_detection_process(coco_model, license_plate_detector, latest_frame, 
                         continue
 
                     if len(license_plates.boxes.data.tolist()) > 0:
-                        print("License Plates Detected:")
+                        # print("License Plates Detected:")
 
                         # Test Code
                         cv2.putText(frame, "License plate detected", (100, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 0),
@@ -97,7 +97,7 @@ def vehicle_detection_process(coco_model, license_plate_detector, latest_frame, 
 
                             # insert number plate to database
                             insert_data_to_data_base("vehicals", "detections", license_plate_text, "IN",image_url=url_name,socketio=socketio)
-                            print("License Plate Text:", license_plate_text)
+                            # print("License Plate Text:", license_plate_text)
                             latest_frame[0] = frame.copy()
                             time.sleep(5)
 
