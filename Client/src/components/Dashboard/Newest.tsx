@@ -70,20 +70,26 @@
 import React, { useEffect, useState } from "react";
 import styles from "./Newest.module.css";
 import io from "socket.io-client"; // Import Socket.IO client
-import { useEntries } from "./lastEntries";
 
 // TypeScript type for the newest entry
 interface Entry {
   date: string;
   time: string;
   numberPlate: string;
-  vehicleType: string;
+  vehicle_type: string;
   status: string;
   image_url: string;
 }
 
 const Newest: React.FC = () => {
-  const { newest: initialNewest } = useEntries(); // Initial fetch from the API
+  const initialNewest: Entry = {
+    date: "YYYY/MM/DD", // Dummy date
+    time: "HH:MM:SS", // Dummy time
+    numberPlate: "XXX 1234", // Dummy number plate
+    vehicle_type: "TYPE", // Dummy vehicle type
+    status: "NULL", // Dummy status
+    image_url: "http://127.0.0.1:5002/images/dummy.png", // Dummy image URL
+  };
   const [newest, setNewest] = useState<Entry | null>(initialNewest); // State for the newest entry
 
   useEffect(() => {
@@ -111,7 +117,7 @@ const Newest: React.FC = () => {
     );
   }
 
-  const { date, time, numberPlate, image_url, vehicleType, status } = newest;
+  const { date, time, numberPlate, image_url, vehicle_type, status } = newest;
 
   return (
     <div className={styles.container}>
@@ -133,7 +139,7 @@ const Newest: React.FC = () => {
           <div className={styles.detailRow}>
             <div className={styles.label}>Vehicle Type</div>
             <div className={`${styles.value} ${styles.valueRounded}`}>
-              {vehicleType}
+              {vehicle_type}
             </div>
           </div>
           <div className={styles.detailRow}>

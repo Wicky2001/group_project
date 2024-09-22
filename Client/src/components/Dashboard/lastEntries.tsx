@@ -34,6 +34,7 @@ interface Entry {
 // Fetch data using axios
 const fetcher = async (url: string): Promise<ApiResponse> => {
   const response = await axios.get<ApiResponse>(url);
+  console.log("newest entry = " + response.data);
   return response.data;
 };
 

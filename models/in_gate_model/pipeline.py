@@ -26,9 +26,9 @@ def vehicle_detection_process(coco_model, license_plate_detector, latest_frame, 
         with lock:
             detections = coco_model(frame)[0]
             for detection in detections.boxes.data.tolist():
-                x1, y1, x2, y2, score, class_id = detection
-                print(detection)
-                if int(class_id) in vehicles:
+                x1, y1, x2, y2, score, vehicle_class_id = detection
+                # print(detection)
+                if int(vehicle_class_id) in vehicles:
                     print("Vehical is detected")
                     cv2.rectangle(frame, (int(x1), int(y1)), (int(x2), int(y2)), (0, 255, 0), 3)
 
@@ -96,7 +96,7 @@ def vehicle_detection_process(coco_model, license_plate_detector, latest_frame, 
                                 print(f"Failed to save the image at: {image_save_location}")
 
                             # insert number plate to database
-                            insert_data_to_data_base("vehicals", "detections", license_plate_text, "IN",image_url=url_name,socketio=socketio)
+                            insert_data_to_data_base("vehicals", "detections", license_plate_text, "IN",image_url=url_name,socketio=socketio,vehicle_id=int(vehicle_class_id))
                             # print("License Plate Text:", license_plate_text)
                             latest_frame[0] = frame.copy()
                             time.sleep(5)

@@ -186,9 +186,19 @@ def read_license_plate(license_plate_crop):
             return finalize_number_plate
 
     return None, None
+def get_vehicle_type(class_id):
+    if class_id == 2:
+        return "Car"
+    elif class_id == 3:
+        return "Motorcycle"
+    elif class_id == 5:
+        return "Bus"  # Assuming 5 corresponds to a bus
+    elif class_id == 7:
+        return "Truck"
+    else:
+        return "Other"  # For any other class IDs
 
-
-def insert_data_to_data_base(database, table_name, number_plate_text, in_or_out, image_url,socketio):
+def insert_data_to_data_base(database, table_name, number_plate_text, in_or_out, image_url,socketio,vehicle_id):
     current_datetime = datetime.datetime.now()
     current_year = current_datetime.year
     current_month = current_datetime.month
@@ -196,6 +206,9 @@ def insert_data_to_data_base(database, table_name, number_plate_text, in_or_out,
     current_hour = current_datetime.hour
     current_minute = current_datetime.minute
     current_second = current_datetime.second
+    vehicle_type = get_vehicle_type(vehicle_id)
+
+    print(f"***************************************vehicle id = {vehicle_type}")
 
     host = "localhost"
     user = "root"
@@ -210,10 +223,10 @@ def insert_data_to_data_base(database, table_name, number_plate_text, in_or_out,
     )
 
     cursor = connection.cursor()
-    sql = (f"INSERT INTO {table_name} (year, month, date, hour, minute, second, number_plate, image_url, in_or_out) "
-           f"VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)")
+    sql = (f"INSERT INTO {table_name} (year, month, date, hour, minute, second, number_plate, image_url, in_or_out,vehicle_type) "
+           f"VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s,%s)")
     data = (current_year, current_month, current_date, current_hour, current_minute, current_second, number_plate_text,
-            image_url, in_or_out)
+            image_url, in_or_out,vehicle_type)
 
     cursor.execute(sql, data)
     connection.commit()
@@ -228,7 +241,8 @@ def insert_data_to_data_base(database, table_name, number_plate_text, in_or_out,
         'numberPlate': number_plate_text,
         'vehicleType': 'other',  # Default to 'other' since we don't have this info
         'status': in_or_out,
-        'image_url': image_url
+        'image_url': image_url,
+        'vehicle_type':vehicle_type
     }
 
     # Emit the new data through socket to connected clients

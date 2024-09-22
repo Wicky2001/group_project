@@ -440,8 +440,8 @@ class addEntrySchema(Schema):
     entryTime = fields.Time(required=True)
     status = fields.String(required=True)
     numberPlate = fields.String(required=True)
-    vehicleType = fields.String(required=True)
-    image_url = fields.String(required=True)
+    vehicleType = fields.String(required=False)
+    image_url = fields.String(required=False)
 
 class addEntry(Resource):
     def post(self):

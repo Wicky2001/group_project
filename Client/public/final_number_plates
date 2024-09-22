@@ -85,3 +85,16 @@ number_plate = PKK6263 confidence_score = 0.30419959492194215 changes = add adap
 number_plate = KK62621 confidence_score = 0.21793220485173742 changes = add adaptive thresh block size:21 c:30 date&time = 2024-09-22_18-49-22
 number_plate = KK62621 confidence_score = 0.502968883734131 changes = add adaptive thresh block size:21 c:30 date&time = 2024-09-22_18-51-07
 number_plate = KK6262 confidence_score = 0.8141761240727391 changes = add adaptive thresh block size:21 c:30 date&time = 2024-09-22_18-51-48
+number_plate = KK6261 confidence_score = 0.20145721383236326 changes = add adaptive thresh block size:21 c:30 date&time = 2024-09-22_20-17-26
+number_plate = K62698 confidence_score = 0.14325682081794638 changes = add adaptive thresh block size:21 c:30 date&time = 2024-09-22_20-17-41
+number_plate = K62691 confidence_score = 0.22010176345067858 changes = add adaptive thresh block size:21 c:30 date&time = 2024-09-22_20-18-44
+number_plate = CAE2132 confidence_score = 0.1437564513003862 changes = add adaptive thresh block size:21 c:30 date&time = 2024-09-22_20-40-05
+number_plate = AE51321 confidence_score = 0.6891945623368849 changes = add adaptive thresh block size:21 c:30 date&time = 2024-09-22_20-40-48
+number_plate = AE5134 confidence_score = 0.5807366962772817 changes = add adaptive thresh block size:21 c:30 date&time = 2024-09-22_20-43-37
+number_plate = CAE6132 confidence_score = 0.25488408910025184 changes = add adaptive thresh block size:21 c:30 date&time = 2024-09-22_20-45-21
+number_plate = CAE2132 confidence_score = 0.9611042096183888 changes = add adaptive thresh block size:21 c:30 date&time = 2024-09-22_20-50-13
+number_plate = C1F5432 confidence_score = 0.08491814064424053 changes = add adaptive thresh block size:21 c:30 date&time = 2024-09-22_20-54-00
+number_plate = AE5132 confidence_score = 0.8485929173202287 changes = add adaptive thresh block size:21 c:30 date&time = 2024-09-22_20-54-14
+number_plate = GHE5132 confidence_score = 0.719072575172439 changes = add adaptive thresh block size:21 c:30 date&time = 2024-09-22_20-55-04
+number_plate = CAE7132 confidence_score = 0.46322877135985 changes = add adaptive thresh block size:21 c:30 date&time = 2024-09-22_20-58-15
+number_plate = CAE2152 confidence_score = 0.47530851570929106 changes = add adaptive thresh block size:21 c:30 date&time = 2024-09-22_21-03-55
