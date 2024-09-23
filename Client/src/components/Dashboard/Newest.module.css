@@ -44,6 +44,11 @@
   font-weight: bold;
   margin-left: 10px;
 }
+@media (max-width: 1289px) {
+  .timestamp {
+    display: none;
+  }
+}
 
 
 .detailsContainer {
@@ -51,6 +56,11 @@
   display: flex;
   flex-direction: column;
   gap: 10px;
+}
+@media (max-width: 1289px) {
+  .detailsContainer {
+    width: 100%;;
+  }
 }
 
 .detailRow {
@@ -76,13 +86,9 @@
   padding: 5px 10px;
 }
 
-
 .valueRounded {
   border-radius: 20px;
   border: 1px solid black;
-}
-.vtype{
-  /* background-color:#ffc107 ; */
 }
 
 .valueGreen {
@@ -102,8 +108,11 @@
   align-items: center;
   justify-content: center;
   height: 150px
-  
-
+}
+@media (max-width: 1289px) {
+  .vehicleImageContainer {
+    display: none;
+  }
 }
 img{
   height: 100%;

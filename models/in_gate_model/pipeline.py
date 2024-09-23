@@ -67,12 +67,32 @@ while True:
                         x1, y1, x2, y2, score, class_id = license_plate
                         # cv2.rectangle(frame, (int(x1), int(y1)), (int(x2), int(y2)), (0, 0, 255), 3)
                         # crop license plate
-                        license_plate_crop = frame[int(y1):int(y2), int(x1):int(x2), :]
+                        license_plate_crop = frame[int(y1)-20:int(y2)+20, (int(x1) + 50):int(x2), :]
+                        # license_plate_crop = frame[int(y1) :int(y2) , int(x1):int(x2), :]
+
+
+                        '''
+                        some times the license_plate_crop will be empty if that happen licence_plate_crop_gray will 
+                        give error to prevent that this code is used
+                        '''
+
+                        if not license_plate_crop.any():
+                            # License plate crop is empty, go to the beginning of the loop
+                            continue  # This jumps to the beginning of the next loop iteration
+
 
                         # process license plate
                         license_plate_crop_grey = cv2.cvtColor(license_plate_crop, cv2.COLOR_BGR2GRAY)
-                        _, license_plate_crop_thresh = cv2.threshold(license_plate_crop_grey, 64, 255,
-                                                                     cv2.THRESH_BINARY_INV)
+                        # _, license_plate_crop_thresh = cv2.threshold(license_plate_crop_grey, 64, 255,
+                        #                                              cv2.THRESH_BINARY_INV)
+                        license_plate_crop_thresh = cv2.adaptiveThreshold(license_plate_crop_grey, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C,
+                                                                cv2.THRESH_BINARY_INV, 21, 30)
+
+                        #debugging code
+                        current_datetime = datetime.datetime.now()
+                        current_datetime_str = current_datetime.strftime("%Y-%m-%d_%H-%M-%S")
+                        image_save_location = f"../../Client/public/detected_vehicle_plate/{current_datetime_str}.jpg"
+                        cv2.imwrite(image_save_location, license_plate_crop_thresh)
 
                         # read license plate number
                         license_plate_text, license_plate_text_score = read_license_plate(license_plate_crop_thresh)

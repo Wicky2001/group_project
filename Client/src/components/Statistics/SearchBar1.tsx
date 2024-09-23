@@ -1,5 +1,4 @@
-// SearchBar.tsx
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./SearchBar1.css";
 
 interface SearchBarProps {
@@ -12,43 +11,78 @@ interface SearchBarProps {
 }
 
 const SearchBar1: React.FC<SearchBarProps> = ({ onSearch }) => {
-  const [startDate, setStartDate] = useState("2024-02-01");
-  const [endDate, setEndDate] = useState("2024-03-07");
-  const [startTime, setStartTime] = useState("00:00 AM");
-  const [endTime, setEndTime] = useState("24:00 PM");
+  const [startDate, setStartDate] = useState(getCurrentDate());
+  const [endDate, setEndDate] = useState(getCurrentDate());
+  const [startTime, setStartTime] = useState("00:00:00");
+  const [endTime, setEndTime] = useState("23:59:00");
+  const [isClear, setIsClear] = useState(false);
+
+  useEffect(() => {
+    // Perform initial search when the component mounts
+    onSearch(startDate, endDate, startTime, endTime);
+  }, []);
+
+  useEffect(() => {
+    if (isClear) {
+      // Perform search with default values when clear is triggered
+      onSearch(startDate, endDate, startTime, endTime);
+      setIsClear(false);
+    }
+  }, [isClear, startDate, endDate, startTime, endTime, onSearch]);
 
   const handleSearch = () => {
     onSearch(startDate, endDate, startTime, endTime);
   };
 
-  const handleClear = () => {
-    setStartDate("2024-02-01");
-    setEndDate("2024-03-07");
-    setStartTime("00:00 AM");
-    setEndTime("24:00 PM");
+  const handleSetStartTime = (value: string) => {
+    setStartTime(value + ":00");
   };
+
+  const handleSetEndTime = (value: string) => {
+    setEndTime(value + ":00");
+  };
+
+  const handleClear = () => {
+    setStartDate(getCurrentDate());
+    setEndDate(getCurrentDate());
+    setStartTime("00:00:00");
+    setEndTime("23:59:00");
+    setIsClear(true);
+  };
+
+  function getCurrentDate(): string {
+    const currentDate = new Date();
+    const year = currentDate.getFullYear();
+    const month = String(currentDate.getMonth() + 1).padStart(2, "0");
+    const day = String(currentDate.getDate()).padStart(2, "0");
+    return `${year}-${month}-${day}`;
+  }
 
   return (
     <div className="search-bar">
+      <label>From: </label>
       <input
         type="date"
         value={startDate}
         onChange={(e) => setStartDate(e.target.value)}
       />
+      <label>To: </label>
       <input
         type="date"
         value={endDate}
         onChange={(e) => setEndDate(e.target.value)}
       />
+      <label>From: </label>
       <input
         type="time"
-        value={startTime}
-        onChange={(e) => setStartTime(e.target.value)}
+        value={startTime.slice(0, 5)} // Adjust to "hh:mm" format for the input
+        onChange={(e) => handleSetStartTime(e.target.value)}
       />
+      <label>To: </label>
       <input
         type="time"
-        value={endTime}
-        onChange={(e) => setEndTime(e.target.value)}
+        value={endTime.slice(0, 5)} // Adjust to "hh:mm" format for the input
+        onChange={(e) => handleSetEndTime(e.target.value)}
       />
       <button onClick={handleSearch}>Search</button>
       <button onClick={handleClear}>Clear</button>
