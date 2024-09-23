@@ -1,103 +1,67 @@
-from ultralytics import YOLO
+import os
+from datetime import datetime
 import cv2
 import time
-from models.utils.util import insert_data_to_data_base,read_license_plate
-import datetime
+from models.utils.util import read_license_plate, insert_data_to_data_base
 
-# load models
-coco_model = YOLO("../utils/yolov8n.pt")
-license_plate_detector = YOLO('../utils/license_plate_detector.pt')
 
-vehicles = [2, 3, 5, 7]
+# Function for vehicle detection
+def vehicle_detection_process(coco_model, license_plate_detector, latest_frame, lock, stop_detection_thread,socketio):
+    vehicles = [2, 3, 5, 7]  # Vehicle class IDs
+    cap = cv2.VideoCapture(0)
+    if not cap.isOpened():
+        print("Error: Could not open camera.")
+        return
 
-# load video
-cap = cv2.VideoCapture(0)
-if not cap.isOpened():
-    print("Error: Could not open camera.")
-    exit()
-number_plate_start_time = time.time()
-window_x = 100  # Horizontal position
-window_y = 100  # Vertical position
-license_plate_text = None
-gate_open = False
-gate_timer_start = 0
-gate_open_duration = 10
-count = 0
-while True:
-    count += 1
-    ret, frame = cap.read()
-    if not ret:
-        break
+    gate_open = False
+    gate_timer_start = 0
+    gate_open_duration = 10
 
-    # Wait for a key press for 1 millisecond, break the loop if 'q' is pressed
+    while not stop_detection_thread():
+        ret, frame = cap.read()
+        if not ret:
+            break
 
-    if not gate_open:
-        # detect vehicles
-        detections = coco_model(frame)[0]
-        for detection in detections.boxes.data.tolist():
-            x1, y1, x2, y2, score, class_id = detection
-            print(detection)
-            if int(class_id) in vehicles:
-                print("Vehical is detected")
+        # Perform vehicle detection and drawing before updating latest_frame
+        with lock:
+            detections = coco_model(frame)[0]
+            for detection in detections.boxes.data.tolist():
+                x1, y1, x2, y2, score, vehicle_class_id = detection
+                # print(detection)
+                if int(vehicle_class_id) in vehicles:
+                    print("Vehical is detected")
+                    cv2.rectangle(frame, (int(x1), int(y1)), (int(x2), int(y2)), (0, 255, 0), 3)
 
-                cv2.rectangle(frame, (int(x1), int(y1)), (int(x2), int(y2)), (0, 255, 0), 3)
+                    vehicle_cropped_frame = frame[int(y1):int(y2), int(x1):int(x2)]
+                    license_plates = license_plate_detector(vehicle_cropped_frame)[0]
+                    if len(license_plates.boxes.data.tolist()) == 0:
+                        continue
 
-                # Test Code
-                # cv2.putText(frame, "Vehical detected", (120, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 0), 5,
-                #             cv2.LINE_AA)
+                    if len(license_plates.boxes.data.tolist()) > 0:
+                        # print("License Plates Detected:")
 
-                # crop thr vehical from the rest of the background
-                vehicle_cropped_frame = frame[int(y1):int(y2), int(x1):int(x2)]
-                # cv2.imshow("Vehical", vehicle_cropped_frame)
-
-                # detect license plates
-                license_plates = license_plate_detector(vehicle_cropped_frame)[0]
-                # if no licence plate is detected go to the beginning of the loop
-                if len(license_plates.boxes.data.tolist()) == 0:
-                    continue
-
-                if len(license_plates.boxes.data.tolist()) > 0:
-                    print("License Plates Detected:")
-
-                    # Test Code
-                    cv2.putText(frame, "License plate detected", (100, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 0), 3,
-                                cv2.LINE_AA)
+                        # Test Code
+                        cv2.putText(frame, "License plate detected", (100, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 0),
+                                    3,
+                                    cv2.LINE_AA)
 
                     for license_plate in license_plates.boxes.data.tolist():
                         x1, y1, x2, y2, score, class_id = license_plate
-                        # cv2.rectangle(frame, (int(x1), int(y1)), (int(x2), int(y2)), (0, 0, 255), 3)
-                        # crop license plate
+                        cv2.rectangle(frame, (int(x1), int(y1)), (int(x2), int(y2)), (0, 0, 255), 3)
                         license_plate_crop = frame[int(y1)-20:int(y2)+20, (int(x1) + 50):int(x2), :]
-                        # license_plate_crop = frame[int(y1) :int(y2) , int(x1):int(x2), :]
-
-
-                        '''
-                        some times the license_plate_crop will be empty if that happen licence_plate_crop_gray will 
-                        give error to prevent that this code is used
-                        '''
 
                         if not license_plate_crop.any():
-                            # License plate crop is empty, go to the beginning of the loop
-                            continue  # This jumps to the beginning of the next loop iteration
+                            continue
 
 
-                        # process license plate
                         license_plate_crop_grey = cv2.cvtColor(license_plate_crop, cv2.COLOR_BGR2GRAY)
-                        # _, license_plate_crop_thresh = cv2.threshold(license_plate_crop_grey, 64, 255,
-                        #                                              cv2.THRESH_BINARY_INV)
-                        license_plate_crop_thresh = cv2.adaptiveThreshold(license_plate_crop_grey, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C,
-                                                                cv2.THRESH_BINARY_INV, 21, 30)
+                        license_plate_crop_thresh = cv2.adaptiveThreshold(
+                            license_plate_crop_grey, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C,
+                            cv2.THRESH_BINARY_INV, 21, 30)
 
-                        #debugging code
-                        current_datetime = datetime.datetime.now()
-                        current_datetime_str = current_datetime.strftime("%Y-%m-%d_%H-%M-%S")
-                        image_save_location = f"../../Client/public/detected_vehicle_plate/{current_datetime_str}.jpg"
-                        cv2.imwrite(image_save_location, license_plate_crop_thresh)
-
-                        # read license plate number
                         license_plate_text, license_plate_text_score = read_license_plate(license_plate_crop_thresh)
-                        if license_plate_text is not None:
 
+                        if license_plate_text is not None:
                             cv2.putText(frame, "Waiting for Gate to Close", (120, 50), cv2.FONT_HERSHEY_SIMPLEX, 1,
                                         (0, 0, 0), 1,
                                         cv2.LINE_AA)
@@ -108,36 +72,36 @@ while True:
 
                             # save captured vehical image to database
 
-                            current_datetime = datetime.datetime.now()
+                            current_datetime = datetime.now()
                             current_datetime_str = current_datetime.strftime("%Y-%m-%d_%H-%M-%S")
                             # ..\Client\public\detected_vehicles_images
-                            image_save_location = f"../../Client/public/detected_vehicles_images/{license_plate_text + current_datetime_str}.jpg"
-                            cv2.imwrite(image_save_location, frame)
+                            save_dir = os.path.abspath(r"C:\Users\Wicky\Documents\GitHub\group_project_code\API\storage\detected_vehicles_images")
+                            if not os.path.exists(save_dir):
+                                os.makedirs(save_dir)
+
+                            # Generate the file name with the current date and time
+                            current_datetime = datetime.now()
+                            current_datetime_str = current_datetime.strftime("%Y-%m-%d_%H-%M-%S")
+                            file_name = f"{license_plate_text + current_datetime_str}.jpg"
+                            url_name = f"http://127.0.0.1:5002/images/{license_plate_text + current_datetime_str}.jpg"
+
+                            # Full path for saving the image
+                            image_save_location = os.path.join(save_dir, file_name)
+
+                            # Save the image
+                            success = cv2.imwrite(image_save_location, license_plate_crop_thresh)
+                            if success:
+                                print(f"Image saved successfully at: {image_save_location}")
+                            else:
+                                print(f"Failed to save the image at: {image_save_location}")
 
                             # insert number plate to database
-                            insert_data_to_data_base("vehicals", "detections", license_plate_text, "IN")
-                            print("License Plate Text:", license_plate_text)
-                            end_time = time.time()
-                            elapsed_time = end_time - number_plate_start_time
-                            print(f"Elapsed Time: {elapsed_time} seconds")
-                            if not gate_open:
-                                print("Opening gate...")
-                                gate_open = True
-                                gate_timer_start = time.time()
-                                cv2.imshow('Webcam Video', frame)
-                                cv2.moveWindow('Webcam Video', window_x, window_y)
-    if not gate_open:
-        # Display the frame in a window named 'Webcam Video'
-        cv2.imshow('Webcam Video', frame)
-        cv2.moveWindow('Webcam Video', window_x, window_y)
+                            insert_data_to_data_base("vehicals", "detections", license_plate_text, "IN",image_url=url_name,socketio=socketio,vehicle_id=int(vehicle_class_id))
+                            # print("License Plate Text:", license_plate_text)
+                            latest_frame[0] = frame.copy()
+                            time.sleep(5)
 
-    if gate_open and (time.time() - gate_timer_start >= gate_open_duration):
-        print("Gate is closed")
-        gate_open = False
-        gate_timer_start = 0
-        number_plate_start_time = 0
+            # Update latest_frame after drawing
+            latest_frame[0] = frame.copy()
 
-    if cv2.waitKey(1) & 0xFF == ord('q'):
-        cap.release()
-        cv2.destroyAllWindows()
-        exit(0)
+    cap.release()

@@ -1,4 +1,7 @@
-from flask import Flask, request,jsonify, Response
+import threading
+from flask_socketio import SocketIO, emit
+import time
+from flask import Flask, request,jsonify, Response,send_from_directory
 from flask_restful import Resource, Api, abort
 from flask_sqlalchemy import SQLAlchemy
 from marshmallow import Schema, fields, ValidationError, validates_schema
@@ -6,18 +9,23 @@ from flask_cors import CORS
 from datetime import datetime
 from sqlalchemy import and_, or_,func
 import cv2
-from .Utilities.parsedDateAndTime import parseDateTime
+from ultralytics import YOLO
 
-# from API.Utilities.parsedDateAndTime import parseDateTime
-# from Utilities import parsedDateAndTime
 
+
+# from .Utilities.parsedDateAndTime import parseDateTime
+
+from Utilities.parsedDateAndTime import parseDateTime
+from models.in_gate_model.pipeline import  vehicle_detection_process
 
 app = Flask(__name__)
 api = Api(app)
+socketio = SocketIO(app, cors_allowed_origins="*")
 CORS(app)
 
-#app.config['SQLALCHEMY_DATABASE_URI'] = "mysql://root@localhost/vehicals"
-app.config['SQLALCHEMY_DATABASE_URI'] = "mysql://root:Mysql%40123@localhost/detections?charset=utf8mb4"
+
+app.config['SQLALCHEMY_DATABASE_URI'] = "mysql://root@localhost/vehicals"
+# app.config['SQLALCHEMY_DATABASE_URI'] = "mysql://root:Mysql%40123@localhost/detections?charset=utf8mb4"
 
 db = SQLAlchemy(app)
 
@@ -31,6 +39,7 @@ class detections(db.Model):
     minute = db.Column(db.Integer, nullable=False)
     second = db.Column(db.Integer, nullable=False)
     number_plate = db.Column(db.String, nullable=True)
+    image_url=db.Column(db.String, nullable=False)
     in_or_out = db.Column(db.String, nullable=False)
     vehicle_type = db.Column(db.String,nullable=False)
 
@@ -55,6 +64,7 @@ class lastEntries(Resource):
                     'second': entry.second,
                 },
                 'number_plate': entry.number_plate,
+                'image_url':entry.image_url,
                 'vehicle_type':entry.vehicle_type,
                 'status': entry.in_or_out
             }
@@ -430,7 +440,8 @@ class addEntrySchema(Schema):
     entryTime = fields.Time(required=True)
     status = fields.String(required=True)
     numberPlate = fields.String(required=True)
-    vehicleType = fields.String(required=True)
+    vehicleType = fields.String(required=False)
+    image_url = fields.String(required=False)
 
 class addEntry(Resource):
     def post(self):
@@ -471,7 +482,7 @@ class addEntry(Resource):
             entryMinute = parsedTime.minute
             entrySecond = parsedTime.second
 
-            entry = detections(year=entryYear,month=entryMonth,date=entryDay ,hour=entryHour,minute=entryMinute,second=entrySecond ,in_or_out=in_or_out,  number_plate =numberPlate, vehicle_type=vehicleType)
+            entry = detections(year=entryYear,month=entryMonth,date=entryDay ,hour=entryHour,minute=entryMinute,second=entrySecond ,in_or_out=in_or_out,  number_plate =numberPlate, vehicle_type=vehicleType,image_url="Manual Entry")
 
             db.session.add(entry)
             db.session.commit()
@@ -534,25 +545,68 @@ api.add_resource(addEntry,"/addEntry")
 api.add_resource(sortTraffic,"/sortTraffic")
 
 # Video streaming endpoint
-camera = cv2.VideoCapture(0)
+# camera = cv2.VideoCapture(0)
+#
+# def generate_frames():
+#     while True:
+#         success, frame = camera.read()
+#         if not success:
+#             break
+#         else:
+#             ret, buffer = cv2.imencode('.jpg', frame)
+#             frame = buffer.tobytes()
+#             yield (b'--frame\r\n'
+#                    b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
 
+@app.route('/images/<path:filename>')
+def serve_image(filename):
+    print(f"Requested filename: {filename}")  # Debug output
+    return send_from_directory(r'C:\Users\Wicky\Documents\GitHub\group_project_code\API\storage\detected_vehicles_images', filename)
+
+stop_detection_thread = False
+latest_frame = [None]  # Use a shared memory for the frame
+lock = threading.Lock()
+
+# Reduce the resolution of the frame for faster processing
+FRAME_WIDTH = 640
+FRAME_HEIGHT = 480
+FPS = 10  # Adjust frame rate
 def generate_frames():
     while True:
-        success, frame = camera.read()
-        if not success:
-            break
-        else:
-            ret, buffer = cv2.imencode('.jpg', frame)
-            frame = buffer.tobytes()
-            yield (b'--frame\r\n'
-                   b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
+        with lock:
+            if latest_frame[0] is not None:
+                ret, buffer = cv2.imencode('.jpg', latest_frame[0], [cv2.IMWRITE_JPEG_QUALITY, 80])  # Compress the image
+                frame = buffer.tobytes()
+                yield (b'--frame\r\n'
+                       b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
+
+        time.sleep(1 / FPS)  # Control the frame rate
+
 
 @app.route('/video_feed')
 def video_feed():
+    global stop_detection_thread
+
+    if not stop_detection_thread:  # Start detection thread if not already running
+        coco_model = YOLO(r"C:\Users\Wicky\Documents\GitHub\group_project_code\models\utils\yolov8n.pt", verbose=False)
+        license_plate_detector = YOLO(r'C:\Users\Wicky\Documents\GitHub\group_project_code\models\utils\license_plate_detector.pt',verbose=False)
+
+        detection_thread = threading.Thread(target=vehicle_detection_process, args=(coco_model, license_plate_detector, latest_frame, lock, lambda: stop_detection_thread,socketio))
+        detection_thread.start()
+
     return Response(generate_frames(), mimetype='multipart/x-mixed-replace; boundary=frame')
 
 
-if __name__ == "__main__":
-    app.run(debug=True, port=5002)
-    print("Server is running...")
+@socketio.on('connect')
+def handle_connect():
+    print('Client connected')
+    emit('message', {'data': 'Connected to the server!'})  # Optional: Send message to client on connect
 
+# Handle client disconnect event
+@socketio.on('disconnect')
+def handle_disconnect():
+    print('Client disconnected')
+
+if __name__ == "__main__":
+    stop_stream_thread = False
+    socketio.run(app, debug=True, port=5002, use_reloader=False,allow_unsafe_werkzeug=True)

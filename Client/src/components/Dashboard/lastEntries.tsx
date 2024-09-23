@@ -15,6 +15,7 @@ interface ApiResponse {
       second: number;
     };
     number_plate: string;
+    image_url: string;
     vehicle_type: string;
     status: string;
   }>;
@@ -25,6 +26,7 @@ interface Entry {
   date: string;
   time: string;
   numberPlate: string;
+  image_url: string;
   vehicleType: string;
   status: "in" | "out";
 }
@@ -32,6 +34,7 @@ interface Entry {
 // Fetch data using axios
 const fetcher = async (url: string): Promise<ApiResponse> => {
   const response = await axios.get<ApiResponse>(url);
+  console.log("newest entry = " + response.data);
   return response.data;
 };
 
@@ -40,10 +43,7 @@ export const useEntries = () => {
   // Use SWR for data fetching
   const { data, error, isLoading } = useSWR<ApiResponse>(
     API_CONFIG.lastEntries,
-    fetcher,
-    {
-      refreshInterval: 5000, // Refresh
-    }
+    fetcher
   );
 
   // Handle cases with error, loading, or no data
@@ -79,6 +79,7 @@ export const useEntries = () => {
       vehicleType:
         item.vehicle_type.toLowerCase() === "" ? "Other" : item.vehicle_type,
       status: item.status.toLowerCase() === "in" ? "in" : "out",
+      image_url: item.image_url,
     };
   };
 
