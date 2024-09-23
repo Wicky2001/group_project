@@ -1,8 +1,12 @@
+import os
 import string
+
+import cv2
 import easyocr
 import mysql.connector
 import datetime
 
+from google.cloud import vision
 
 # Initialize the OCR reader
 reader = easyocr.Reader(['en'], gpu=True)
@@ -62,9 +66,55 @@ def write_csv(results, output_path):
         f.close()
 
 
+# def license_complies_format(text):
+#     """
+#     Check if the license plate text complies with the required format.
+#
+#     Args:
+#         text (str): License plate text.
+#
+#     Returns:
+#         bool: True if the license plate complies with the format, False otherwise.
+#     """
+#
+#     if len(text) == 6:
+#         if (text[0] in string.ascii_uppercase or text[0] in dict_int_to_char.keys()) and \
+#                 (text[1] in string.ascii_uppercase or text[1] in dict_int_to_char.keys()) and \
+#                 (text[2] in ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'] or text[
+#                     2] in dict_char_to_int.keys()) and \
+#                 (text[3] in ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'] or text[
+#                     3] in dict_char_to_int.keys()) and \
+#                 (text[4] in ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'] or text[
+#                     4] in dict_char_to_int.keys()) and \
+#                 (text[5] in ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'] or text[5] in dict_char_to_int.keys()):
+#             return True
+#         else:
+#             return False
+#     else:
+#         if len(text) == 7:
+#             if (text[0] in string.ascii_uppercase or text[0] in dict_int_to_char.keys()) and \
+#                     (text[1] in string.ascii_uppercase or text[1] in dict_int_to_char.keys()) and \
+#                     (text[2] in string.ascii_uppercase or text[2] in dict_int_to_char.keys()) and \
+#                     (text[3] in ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'] or text[
+#                         3] in dict_char_to_int.keys()) and \
+#                     (text[4] in ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'] or text[
+#                         4] in dict_char_to_int.keys()) and \
+#                     (text[5] in ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'] or text[
+#                         5] in dict_char_to_int.keys()) and \
+#                     (text[6] in ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'] or text[
+#                         6] in dict_char_to_int.keys()):
+#                 return True
+#             else:
+#                 return False
+
+
+import string
+
+
 def license_complies_format(text):
     """
     Check if the license plate text complies with the required format.
+    License plate can either start with 2 or 3 uppercase letters followed by 4 digits.
 
     Args:
         text (str): License plate text.
@@ -72,44 +122,23 @@ def license_complies_format(text):
     Returns:
         bool: True if the license plate complies with the format, False otherwise.
     """
+
+    # Remove all spaces from the text
+    text = text.replace(" ", "")
+
+    # Check if length matches either 6 or 7 characters
     if len(text) == 6:
-        if (text[0] in string.ascii_uppercase or text[0] in dict_int_to_char.keys()) and \
-                (text[1] in string.ascii_uppercase or text[1] in dict_int_to_char.keys()) and \
-                (text[2] in ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'] or text[
-                    2] in dict_char_to_int.keys()) and \
-                (text[3] in ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'] or text[
-                    3] in dict_char_to_int.keys()) and \
-                (text[4] in ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'] or text[
-                    4] in dict_char_to_int.keys()) and \
-                (text[5] in ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'] or text[5] in dict_char_to_int.keys()):
+        # Format: 2 uppercase letters followed by 4 digits (e.g., AE2342)
+        if text[:2].isalpha() and text[:2].isupper() and text[2:].isdigit():
             return True
-        else:
-            return False
-    else:
-        if len(text) == 7:
-            if (text[0] in string.ascii_uppercase or text[0] in dict_int_to_char.keys()) and \
-                    (text[1] in string.ascii_uppercase or text[1] in dict_int_to_char.keys()) and \
-                    (text[2] in string.ascii_uppercase or text[2] in dict_int_to_char.keys()) and \
-                    (text[3] in ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'] or text[
-                        3] in dict_char_to_int.keys()) and \
-                    (text[4] in ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'] or text[
-                        4] in dict_char_to_int.keys()) and \
-                    (text[5] in ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'] or text[
-                        5] in dict_char_to_int.keys()) and \
-                    (text[6] in ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'] or text[
-                        6] in dict_char_to_int.keys()):
-                return True
-            else:
-                return False
 
+    elif len(text) == 7:
+        # Format: 3 uppercase letters followed by 4 digits (e.g., CAE9132)
+        if text[:3].isalpha() and text[:3].isupper() and text[3:].isdigit():
+            return True
 
-
-
-
-
-
-
-
+    # If none of the conditions match, return False
+    return False
 
 
 def format_license(text):
@@ -145,6 +174,95 @@ def format_license(text):
         return license_plate_
 
 
+
+
+def extract_the_text_from_CV2image(cv2_image):
+    """
+          Use Google vision api to read text from given image
+
+          returns
+            text
+
+           """
+
+    # Use environment variable for credentials
+    os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = r"C:\Users\Wicky\Documents\GitHub\group_project_code\credentials\avid-circle-432005-d6-500c180b6ddf.json"
+
+    client = vision.ImageAnnotatorClient()
+
+    # Here converting cv2 image in to jpg because cloud vision do not support cv2 format
+    success, encoded_image = cv2.imencode('.jpg', cv2_image)
+    content = encoded_image.tobytes()
+
+    image = vision.Image(content=content)
+    response = client.text_detection(image=image)
+    texts = response.text_annotations
+
+    text = ""
+
+    for text in texts:
+        description = text.description
+        text = description
+        break
+
+    if response.error.message:
+        raise Exception(
+            "{}\nFor more info on error messages, check: "
+            "https://cloud.google.com/apis/design/errors".format(response.error.message)
+        )
+
+
+    print(f"Licence plate text = {text}***************************************************************************")
+    return text
+
+
+# def read_license_plate(license_plate_crop):
+#     """
+#     Read the license plate text from the given cropped image.
+#
+#     Args:
+#         license_plate_crop (PIL.Image.Image): Cropped image containing the license plate.
+#
+#     Returns:
+#         tuple: Tuple containing the formatted license plate text and its confidence score.
+#     """
+#
+#     # detections = reader.readtext(license_plate_crop)
+#
+#     # for detection in detections:
+#     #     bbox, text, score = detection
+#     #     filtered_text = ''.join(char for char in text if char.isalnum())
+#     #     #debug code
+#     #     with open(r"C:\Users\Wicky\Documents\GitHub\group_project_code\Client\public\raw_number_plate", "a") as file_object:
+#     #         text_to_append = f"{filtered_text}\n"
+#     #         file_object.write(text_to_append)
+#
+#         # text = text.upper().replace(' ', '')
+#         # debugCode
+#     filtered_text = extract_the_text_from_CV2image(license_plate_crop)
+#     score = 0
+#
+#         if license_complies_format(filtered_text):
+#             finalize_number_plate =  format_license(filtered_text), score
+#
+#             #debug
+#
+#             current_datetime = datetime.datetime.now()
+#             current_datetime_str = current_datetime.strftime("%Y-%m-%d_%H-%M-%S")
+#             changes = "add adaptive thresh block size:21 c:30"
+#
+#
+#             with open(r"C:\Users\Wicky\Documents\GitHub\group_project_code\Client\public\final_number_plates", "a") as file_object:
+#                 text_to_append = f"number_plate = {filtered_text} confidence_score = {score} changes = {changes} date&time = {current_datetime_str}\n"
+#                 file_object.write(text_to_append)
+#             return finalize_number_plate
+#
+#     return None, None
+
+
+import datetime
+
+
 def read_license_plate(license_plate_crop):
     """
     Read the license plate text from the given cropped image.
@@ -156,36 +274,29 @@ def read_license_plate(license_plate_crop):
         tuple: Tuple containing the formatted license plate text and its confidence score.
     """
 
-    detections = reader.readtext(license_plate_crop)
+    # Assuming `extract_the_text_from_CV2image` and `license_complies_format` are defined elsewhere
+    filtered_text = extract_the_text_from_CV2image(license_plate_crop)
+    score = 0  # Placeholder for confidence score. Update with actual confidence calculation.
+    print(f"Licence plate text = {filtered_text} license_complies_format = {license_complies_format(filtered_text)}  ****************************")
+    if license_complies_format(filtered_text):
+        # finalize_number_plate = format_license(filtered_text), score
+        finalize_number_plate = filtered_text
+        # Debugging and logging information
+        current_datetime = datetime.datetime.now()
+        current_datetime_str = current_datetime.strftime("%Y-%m-%d_%H-%M-%S")
+        changes = "add adaptive thresh block size:21 c:30"
 
-    for detection in detections:
-        bbox, text, score = detection
-        filtered_text = ''.join(char for char in text if char.isalnum())
-        #debug code
-        with open(r"C:\Users\Wicky\Documents\GitHub\group_project_code\Client\public\raw_number_plate", "a") as file_object:
-            text_to_append = f"{filtered_text}\n"
+        with open(r"C:\Users\Wicky\Documents\GitHub\group_project_code\Client\public\final_number_plates",
+                  "a") as file_object:
+            text_to_append = (f"number_plate = {filtered_text} confidence_score = {score} "
+                              f"changes = {changes} date&time = {current_datetime_str}\n")
             file_object.write(text_to_append)
 
-        # text = text.upper().replace(' ', '')
-        # debugCode
-
-
-        if license_complies_format(filtered_text):
-            finalize_number_plate =  format_license(filtered_text), score
-
-            #debug
-
-            current_datetime = datetime.datetime.now()
-            current_datetime_str = current_datetime.strftime("%Y-%m-%d_%H-%M-%S")
-            changes = "add adaptive thresh block size:21 c:30"
-
-
-            with open(r"C:\Users\Wicky\Documents\GitHub\group_project_code\Client\public\final_number_plates", "a") as file_object:
-                text_to_append = f"number_plate = {filtered_text} confidence_score = {score} changes = {changes} date&time = {current_datetime_str}\n"
-                file_object.write(text_to_append)
-            return finalize_number_plate
+        return finalize_number_plate,score
 
     return None, None
+
+
 def get_vehicle_type(class_id):
     if class_id == 2:
         return "Car"
