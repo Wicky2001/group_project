@@ -36,7 +36,7 @@ This project is an **Automatic Number-Plate Recognition (ANPR) System** powered 
 - **CS/2020/028** - Pruthuvi  
 - **CS/2020/031** - Odhila  
 - **CS/2020/034** - Sahan  
-- **CS/2020/035** - Pasindu  
+- **CS/2020/035** - Wickramarathna
 - **CS/2020/037** - Bashitha  
 - **CS/2020/056** - Faslan  
 
