@@ -13,7 +13,8 @@ This project is an **Automatic Number-Plate Recognition (ANPR) System** powered 
 - **License Plate Recognition** with OCR techniques.  
 - **Database Management** for vehicle entry records.  
 - **User Dashboard** to monitor vehicle logs and statistics.
-- ![image](https://github.com/user-attachments/assets/a70c858d-7266-4b74-87ba-21184b701446)
+
+> ![image](https://github.com/user-attachments/assets/9bb35406-1cf7-4a01-bee9-ccb0fd49b8fb)
 
 
 ## Technologies Used  
@@ -27,7 +28,10 @@ This project is an **Automatic Number-Plate Recognition (ANPR) System** powered 
 ## Challenges Faced  
 - Finding a large enough dataset for training.  
 - Computational power limitations.  
-- Optimizing model performance to reduce overfitting.  
+- Optimizing model performance to reduce overfitting.
+
+>![image](https://github.com/user-attachments/assets/070711c0-1aa8-4d2b-9bf4-65451e5fb4be)
+ 
 
 ## Future Work  
 - Enhance adaptability to different environmental conditions.  
