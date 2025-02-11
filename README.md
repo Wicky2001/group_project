@@ -12,7 +12,9 @@ This project is an **Automatic Number-Plate Recognition (ANPR) System** powered 
 - **Vehicle Detection** using YOLO-based deep learning models.  
 - **License Plate Recognition** with OCR techniques.  
 - **Database Management** for vehicle entry records.  
-- **User Dashboard** to monitor vehicle logs and statistics.  
+- **User Dashboard** to monitor vehicle logs and statistics.
+- ![image](https://github.com/user-attachments/assets/a70c858d-7266-4b74-87ba-21184b701446)
+
 
 ## Technologies Used  
 - **Python**  
