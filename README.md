@@ -1,4 +1,4 @@
-# AI-Powered Vehicle Recognition System  
+# ANPR System  
 
 ## Overview  
 This project is an **Automatic Number-Plate Recognition (ANPR) System** powered by **computer vision**. The system identifies vehicles and their license plates, maintains a database, and provides a user portal for supervision.  
